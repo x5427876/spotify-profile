@@ -13,8 +13,6 @@ export default function Home() {
     const [topArtists, setTopArtists] = useState([])
     const [topTracks, setTopTracks] = useState([])
 
-    console.log(authUrl)
-
     useEffect(() => {
         if (spotifyApi.getAccessToken()) {
             Promise.all([
