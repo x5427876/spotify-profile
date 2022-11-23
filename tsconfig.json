@@ -16,6 +16,6 @@
     "incremental": true,
     "noImplicitAny": false,
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/auth/[...nextauth].js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/auth/[...nextauth].js", "hooks/useSpotify.js"],
   "exclude": ["node_modules"]
 }
