@@ -12,7 +12,7 @@ export default function MyApp({ Component, pageProps: { session, ...pageProps } 
           <title>Spotify Profile</title>
           <link rel="shortcut icon" href="/spotify.svg" />
         </Head>
-        <div className='flex'>
+        <div className='flex flex-col-reverse md:flex-row'>
           <Aside />
           <Component {...pageProps} />
         </div>

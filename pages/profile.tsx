@@ -2,6 +2,7 @@ import { useSession, signIn, signOut, getProviders } from "next-auth/react"
 import useSpotify from '../hooks/useSpotify'
 import { useEffect, useState, useMemo } from "react";
 import BlockUI from "../components/blockUI";
+import Link from "next/link";
 
 
 const Home = () => {
@@ -25,11 +26,11 @@ const Home = () => {
                 spotifyApi.getMyTopTracks({ limit: 10, time_range: 'long_term' }).then((res) => setTopTracks(res.body.items))
             ]).then(() => setIsLoading(false))
         }
-    }, [session, spotifyApi])
+    }, [session])
 
     return (
         <>
-            <div className='w-[calc(100vw-100px)] h-[100vh] overflow-y-scroll bg-zinc-900 flex flex-col justify-start items-center pt-20 absolute top-0 left-[100px]'>
+            <div className='md:w-[calc(100vw-100px)] md:h-[100vh] w-full h-[calc(100vh-70px)] overflow-y-scroll bg-zinc-900 flex flex-col justify-start items-center pt-20 md:absolute md:top-0 md:left-[100px]'>
                 <div className='w-full h-full flex flex-col justify-start items-center'>
                     <img className="rounded-full w-[150px]" src={session?.user?.image} />
                     <div className="mt-6 text-white font-bold text-5xl">{session?.user?.name}</div>
@@ -52,26 +53,29 @@ const Home = () => {
                         onClick={() => signOut({ callbackUrl: `${window.location.origin}/login` })}>LOG OUT</div>
 
                 </div>
-                <div className="w-full px-[5vw] mt-16 flex justify-between">
-                    <div className="w-[45%]">
+                <div className="w-full px-[5vw] mt-16 flex flex-col md:flex-row justify-between">
+                    <div className="w-full md:w-[45%] mb-8">
                         <div className="flex items-center justify-between">
                             <div className="text-white font-bold text-xl">Top Artist of All Time</div>
-                            <div className='text-white text-xs px-6 py-2 border border-white rounded-full cursor-pointer hover:bg-white hover:text-black transition'>
-                                SEE MORE
-                            </div>
+                            <Link href='/artists'>
+                                <div className='text-white text-xs px-6 py-2 border border-white rounded-full cursor-pointer hover:bg-white hover:text-black transition'>
+                                    SEE MORE
+                                </div>
+                            </Link>
+
                         </div>
                         <div className="mt-10 px-4">
                             {topArtists?.map(artist => {
                                 return (
                                     <div className="flex items-center mb-6" key={artist.id}>
                                         <img className="rounded-full w-[50px]" src={artist.images[2].url} />
-                                        <div className="ml-6 text-white text-lg">{artist.name}</div>
+                                        <div className="ml-6 text-white text-lg cursor-pointer hover:border-b border-white">{artist.name}</div>
                                     </div>
                                 )
                             })}
                         </div>
                     </div>
-                    <div className="w-[45%]">
+                    <div className="w-full md:w-[45%] mb-8">
                         <div className="flex items-center justify-between">
                             <div className="text-white font-bold text-xl">Top Tracks of All Time</div>
                             <div className='text-white text-xs px-6 py-2 border border-white rounded-full cursor-pointer hover:bg-white hover:text-black transition'>
@@ -83,8 +87,10 @@ const Home = () => {
                                 return (
                                     <div className="flex items-center mb-6" key={track.id}>
                                         <img className="w-[50px]" src={track.album.images[1].url} />
-                                        <div className="ml-6 text-white text-lg flex flex-col w-[90%]">
-                                            <div>{track.name}</div>
+                                        <div className="ml-6 text-white text-lg flex flex-col w-[80%]">
+                                            <div>
+                                                <span className="cursor-pointer hover:border-b border-white w-auto">{track.name}</span>
+                                            </div>
                                             <div className="text-sm text-gray-400 overflow-hidden text-ellipsis whitespace-nowrap">
                                                 {track.album.artists[0].name}&nbsp;·&nbsp;&nbsp;{track.album.name}
                                             </div>

@@ -29,10 +29,10 @@ const Artists = () => {
 
     return (
         <>
-            <div className='w-[calc(100vw-100px)] h-[100vh] overflow-y-scroll bg-zinc-900 flex flex-col justify-start items-center pt-20 px-[5vw] absolute top-0 left-[100px]'>
-                <div className="w-full text-white flex justify-between items-center">
-                    <div className="font-bold text-2xl">Top Artists</div>
-                    <div className="flex">
+            <div className='w-full h-[calc(100vh-70px)] md:w-[calc(100vw-100px)] md:h-[100vh] overflow-y-scroll bg-zinc-900 flex flex-col justify-start items-center pt-10 md:pt-20 px-[5vw] absolute top-0 md:left-[100px]'>
+                <div className="w-full text-white flex flex-col md:flex-row justify-center md:justify-between items-center">
+                    <div className="flex font-bold text-2xl">Top Artists</div>
+                    <div className="flex mt-6 md:mt-0">
                         <TabButton isSelected={range === Range.long} onClick={() => setRange(Range.long)} title='All Time' />
                         <TabButton isSelected={range === Range.mid} onClick={() => setRange(Range.mid)} title='Last 6 Months' />
                         <TabButton isSelected={range === Range.short} onClick={() => setRange(Range.short)} title='Last 4 Weeks' />
@@ -41,9 +41,9 @@ const Artists = () => {
                 <div className="mt-14 w-full flex flex-wrap ">
                     {artistsList?.map(artist => {
                         return (
-                            <div className="flex flex-col justify-center items-center w-[calc(20%-20px)] m-[10px]">
+                            <div className="flex flex-col justify-center items-center w-[calc(20%-30px)] m-[15px]">
                                 <img className="rounded-full w-full h-auto" src={artist.images[0].url} />
-                                <div className="text-md text-white mt-2">{artist.name}</div>
+                                <div className="text-md text-white my-4">{artist.name}</div>
                             </div>
                         )
                     })}

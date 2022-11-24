@@ -14,7 +14,7 @@ const TabButton: FC<Props> = ({ isSelected, title, onClick }) => {
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}
             onClick={onClick}
-            className={`mx-4 cursor-pointer ${isSelected && 'border-b border-white'} ${(isSelected || isHover) ? 'text-white' : 'text-[#9B9B9B]'} transition`}>{title}</button>
+            className={`mx-4 cursor-pointer text-[14px] md:text-lg ${isSelected && 'border-b border-white'} ${(isSelected || isHover) ? 'text-white' : 'text-[#9B9B9B]'} transition`}>{title}</button>
     )
 }
 
