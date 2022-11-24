@@ -43,11 +43,6 @@ export const authOptions = {
         };
       }
 
-      // access token not expired yet
-      if (Date.now() < token.accessTokenExpires) {
-        return token;
-      }
-
       // access token expired
       return await refreshAccessToken(token);
     },
