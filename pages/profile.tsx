@@ -47,7 +47,6 @@ const Home = () => {
                             <div className="text-spotify font-bold text-2xl">{playlist.length}</div>
                             <div>PLAYLISTS</div>
                         </div>
-
                     </div>
                     <div className='text-white mt-8 px-6 py-2 border border-white rounded-full cursor-pointer hover:bg-white hover:text-black transition'
                         onClick={() => signOut({ callbackUrl: `${window.location.origin}/login` })}>LOG OUT</div>
@@ -67,10 +66,12 @@ const Home = () => {
                         <div className="mt-10 px-4">
                             {topArtists?.map(artist => {
                                 return (
-                                    <div className="flex items-center mb-6" key={artist.id}>
-                                        <img className="rounded-full w-[50px]" src={artist.images[2].url} />
-                                        <div className="ml-6 text-white text-lg cursor-pointer hover:border-b border-white">{artist.name}</div>
-                                    </div>
+                                    <Link href={`/artists/${artist.id}`}>
+                                        <div className="flex items-center mb-6" key={artist.id}>
+                                            <img className="rounded-full w-[50px]" src={artist.images[2].url} />
+                                            <div className="ml-6 text-white text-lg cursor-pointer hover:border-b border-white">{artist.name}</div>
+                                        </div>
+                                    </Link>
                                 )
                             })}
                         </div>
