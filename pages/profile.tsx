@@ -1,8 +1,11 @@
-import { useSession, signIn, signOut, getProviders } from "next-auth/react"
-import useSpotify from '../hooks/useSpotify'
-import { useEffect, useState, useMemo } from "react";
-import BlockUI from "../components/blockUI";
+import { useSession, signOut } from "next-auth/react"
+import { useEffect, useState } from "react";
 import Link from "next/link";
+
+import useSpotify from '../hooks/useSpotify'
+import BlockUI from "../components/blockUI";
+import ArtistCard from "../components/artist/artistCard";
+import TrackCard from "../components/track/trackCard";
 
 
 const Home = () => {
@@ -66,12 +69,7 @@ const Home = () => {
                         <div className="mt-10 px-4">
                             {topArtists?.map(artist => {
                                 return (
-                                    <Link href={`/artist/${artist.id}`}>
-                                        <div className="flex items-center mb-6" key={artist.id}>
-                                            <img className="rounded-full w-[50px]" src={artist.images[2].url} />
-                                            <div className="ml-6 text-white text-lg cursor-pointer hover:border-b border-white">{artist.name}</div>
-                                        </div>
-                                    </Link>
+                                    <ArtistCard image={artist.images[2].url} name={artist.name} key={artist.id} link={`/artist/${artist.id}`} />
                                 )
                             })}
                         </div>
@@ -86,19 +84,7 @@ const Home = () => {
                         <div className="mt-10 px-4">
                             {topTracks?.map(track => {
                                 return (
-                                    <Link href={`/track/${track.id}`}>
-                                        <div className="flex items-center mb-6" key={track.id}>
-                                            <img className="w-[50px]" src={track.album.images[1].url} />
-                                            <div className="ml-6 text-white text-lg flex flex-col w-[80%]">
-                                                <div>
-                                                    <span className="cursor-pointer hover:border-b border-white w-auto">{track.name}</span>
-                                                </div>
-                                                <div className="text-sm text-gray-400 overflow-hidden text-ellipsis whitespace-nowrap">
-                                                    {track.album.artists[0].name}&nbsp;·&nbsp;&nbsp;{track.album.name}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Link>
+                                    <TrackCard image={track.album.images[1].url} name={track.name} artist={track.album.artists[0].name} album={track.album.name} link={`/track/${track.id}`} />
                                 )
                             })}
                         </div>
