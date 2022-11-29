@@ -84,7 +84,13 @@ const Home = () => {
                         <div className="mt-10 px-4">
                             {topTracks?.map(track => {
                                 return (
-                                    <TrackCard image={track.album.images[1].url} name={track.name} artist={track.album.artists[0].name} album={track.album.name} link={`/track/${track.id}`} />
+                                    <TrackCard
+                                        image={track.album.images[1].url}
+                                        name={track.name}
+                                        artist={track.album.artists[0].name}
+                                        album={track.album.name}
+                                        duration={track.duration_ms}
+                                        link={`/track/${track.id}`} />
                                 )
                             })}
                         </div>
