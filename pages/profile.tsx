@@ -77,9 +77,11 @@ const Home = () => {
                     <div className="w-full md:w-[45%] mb-8">
                         <div className="flex items-center justify-between">
                             <div className="text-white font-bold text-xl">Top Tracks of All Time</div>
-                            <div className='text-white text-xs px-6 py-2 border border-white rounded-full cursor-pointer hover:bg-white hover:text-black transition'>
-                                SEE MORE
-                            </div>
+                            <Link href='/tracks'>
+                                <div className='text-white text-xs px-6 py-2 border border-white rounded-full cursor-pointer hover:bg-white hover:text-black transition'>
+                                    SEE MORE
+                                </div>
+                            </Link>
                         </div>
                         <div className="mt-10 px-4">
                             {topTracks?.map(track => {
