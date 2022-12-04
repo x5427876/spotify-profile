@@ -47,9 +47,10 @@ const Tracks = () => {
                     </div>
                 </div>
                 <div>
-                    {tracks?.map((track, index) => {
+                    {tracks?.map((track) => {
                         return (
                             <TrackCard
+                                key={track.id}
                                 image={track.album.images[0].url}
                                 name={track.name}
                                 artist={track.album.artists[0].name}

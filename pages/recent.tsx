@@ -45,6 +45,7 @@ const Recent = () => {
                     {tracks?.map((track, index) => {
                         return (
                             <TrackCard
+                                key={`${track.track.id}_${index}`}
                                 image={track.track.album.images[0].url}
                                 name={track.track.name}
                                 artist={track.track.album.artists[0].name}

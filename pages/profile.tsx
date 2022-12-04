@@ -87,6 +87,7 @@ const Home = () => {
                             {topTracks?.map(track => {
                                 return (
                                     <TrackCard
+                                        key={track.id}
                                         image={track.album.images[1].url}
                                         name={track.name}
                                         artist={track.album.artists[0].name}

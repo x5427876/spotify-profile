@@ -29,7 +29,7 @@ const Artist = () => {
         <>
             <div className='w-[100vw] h-[calc(100vh-70px)] px-[5vw] md:h-[100vh] md:w-[calc(100vw-100px)] md:ml-[100px] bg-zinc-900 text-white flex flex-col justify-start items-center overflow-y-scroll'>
                 <div className='flex flex-col items-center'>
-                    <img src={artist?.images[0].url} className='rounded-full w-1/2 mt-20' />
+                    <img src={artist?.images[0].url} className='rounded-full w-1/2 mt-20 aspect-square' />
                     <div className='my-8 text-2xl md:text-3xl font-bold'>{artist?.name}</div>
                 </div>
                 <div className="mt-4 w-full">

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import Link from "next/link"
 
 import useSpotify from '../hooks/useSpotify'
 import TabButton from "../components/tab/tabButton"
 import BlockUI from "../components/blockUI";
+import MediaCard from "../components/mediaCard";
 
 enum Range {
     short = 'short_term',
@@ -38,13 +40,15 @@ const Artists = () => {
                         <TabButton isSelected={range === Range.short} onClick={() => setRange(Range.short)} title='Last 4 Weeks' />
                     </div>
                 </div>
-                <div className="mt-14 w-full flex flex-wrap ">
+                <div className="mt-14 w-full grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[30px]">
                     {artistsList?.map(artist => {
                         return (
-                            <div className="flex flex-col justify-center items-center w-[calc(20%-30px)] m-[15px]">
-                                <img className="rounded-full w-full h-auto" src={artist.images[0].url} />
-                                <div className="text-md text-white my-4">{artist.name}</div>
-                            </div>
+                            <Link href={`/artist/${artist.id}`} key={artist.id} passHref legacyBehavior>
+                                <MediaCard
+                                    image={artist.images[0].url}
+                                    title={artist.name}
+                                    imageShape='rounded-full' />
+                            </Link>
                         )
                     })}
                 </div>
