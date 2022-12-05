@@ -17,7 +17,9 @@ const MediaCard: FC<Props> = ({ image, title, imageShape, href }) => {
                 onMouseEnter={() => setIsHover(true)}
                 onMouseLeave={() => setIsHover(false)}>
                 <img className={`${isHover && 'opacity-50 transition ease-in-out'} w-full aspect-square rounded-full`} src={image} />
-                <div className="text-md text-white my-4 overflow-hidden text-ellipsis whitespace-nowrap w-[80%] text-center">{title}</div>
+                <div className="text-md text-white my-4 overflow-hidden text-ellipsis whitespace-nowrap w-[80%] text-center">
+                    <span className='text-hover-effect'>{title}</span>
+                </div>
             </div >
         </Link>
 

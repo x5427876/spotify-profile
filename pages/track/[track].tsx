@@ -38,16 +38,18 @@ const Track = () => {
         <>
             <div className='spotify-container'>
                 <div className='w-full flex flex-col md:flex-row items-center md:items-start'>
-                    <img src={track?.album.images[0].url} className='aspect-square md:mt-0 md:w-1/3 p-4 md:p-0'></img>
+                    <img src={track?.album.images[0].url} className='aspect-square md:mt-0 md:w-1/3 p-4 md:p-0' />
                     <div className='flex flex-col items-center md:items-start md:ml-10 py-2'>
-                        <div className='font-bold text-4xl text-center md:text-left w-[90%] overflow-hidden text-ellipsis whitespace-nowrap mt-8 md:mt-0'>{track?.name}</div>
-                        <div className='text-2xl mt-4 text-[#9B9B9B]'>{track?.artists[0].name}</div>
-                        <div className='text-lg mt-2 text-[#9B9B9B] w-[90%] text-center md:text-left overflow-hidden text-ellipsis whitespace-nowrap'>{track?.album.name}&nbsp;·&nbsp;&nbsp;{track?.album.release_date.slice(0, 4)}</div>
-                        <Link href={track?.album.external_urls.spotify || ''}>
-                            <div className='text-white mt-8 px-8 py-4 bg-[#1DB954] rounded-full font-bold cursor-pointer hover:brightness-110 transition ease-in-out'>
-                                PLAY ON SPOTIFY
-                            </div>
-                        </Link>
+                        <div className='font-bold text-4xl text-center md:text-left w-[100%] overflow-hidden text-ellipsis whitespace-nowrap mt-8 md:mt-0'>
+                            {track?.album.name}
+                        </div>
+                        <div className='text-2xl mt-4 text-[#9B9B9B]'>
+                            {track?.artists[0].name}&nbsp;·&nbsp;&nbsp;{track?.album.release_date.slice(0, 4)}
+                        </div>
+                        <a href={track?.album.external_urls.spotify || ''} target="_blank"
+                            className='text-white mt-8 px-8 py-4 bg-[#1DB954] rounded-full font-bold cursor-pointer hover:brightness-110 transition ease-in-out'>
+                            PLAY ON SPOTIFY
+                        </a>
                     </div>
                 </div>
                 <div className='mt-10'>

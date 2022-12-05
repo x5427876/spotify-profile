@@ -69,7 +69,11 @@ const Home = () => {
                         <div className="mt-10 px-4">
                             {topArtists?.map(artist => {
                                 return (
-                                    <ArtistCard image={artist.images[2].url} name={artist.name} key={artist.id} link={`/artist/${artist.id}`} />
+                                    <ArtistCard
+                                        image={artist.images[2].url}
+                                        name={artist.name}
+                                        key={artist.id}
+                                        link={`/artist/${artist.id}`} />
                                 )
                             })}
                         </div>

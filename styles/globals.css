@@ -11,7 +11,11 @@
         @apply w-full text-white flex justify-center md:justify-start items-center mb-10 font-bold text-2xl;
     }
 
-    .hover-effect {
+    .pic-hover-effect {
         @apply opacity-50 transition ease-in-out;
+    }
+
+    .text-hover-effect {
+        @apply hover:border-b border-white;
     }
 }
