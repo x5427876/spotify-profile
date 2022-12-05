@@ -16,7 +16,7 @@ const Artist = () => {
     const [albums, setAlbums] = useState([])
 
     useEffect(() => {
-        if (spotifyApi.getAccessToken() && session) {
+        if (spotifyApi.getAccessToken() && session && router.query.artist) {
             Promise.all([
                 spotifyApi.getArtist(router.query.artist).then((res) => setArtist(res.body)),
                 spotifyApi.getArtistTopTracks(router.query.artist, 'US').then((res) => setTopTracks(res.body.tracks.slice(0, 5))),

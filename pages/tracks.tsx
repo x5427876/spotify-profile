@@ -37,7 +37,7 @@ const Tracks = () => {
 
     return (
         <>
-            <div className='w-[100vw] h-[calc(100vh-70px)] pt-8 md:w-[calc(100vw-100px)] md:h-[100vh] md:ml-[100px] p-[5vw] bg-zinc-900 text-white flex flex-col overflow-y-scroll'>
+            <div className='spotify-container'>
                 <div className="w-full text-white flex flex-col md:flex-row justify-center md:justify-between items-center mb-10">
                     <div className="flex font-bold text-2xl">Top Tracks</div>
                     <div className="flex mt-6 md:mt-0">

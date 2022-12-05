@@ -31,7 +31,7 @@ const Artists = () => {
 
     return (
         <>
-            <div className='w-full h-[calc(100vh-70px)] md:w-[calc(100vw-100px)] md:h-[100vh] overflow-y-scroll bg-zinc-900 flex flex-col justify-start items-center pt-10 md:pt-20 px-[5vw] absolute top-0 md:left-[100px]'>
+            <div className='spotify-container'>
                 <div className="w-full text-white flex flex-col md:flex-row justify-center md:justify-between items-center">
                     <div className="flex font-bold text-2xl">Top Artists</div>
                     <div className="flex mt-6 md:mt-0">
@@ -43,12 +43,11 @@ const Artists = () => {
                 <div className="mt-14 w-full grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[30px]">
                     {artistsList?.map(artist => {
                         return (
-                            <Link href={`/artist/${artist.id}`} key={artist.id} passHref legacyBehavior>
-                                <MediaCard
-                                    image={artist.images[0].url}
-                                    title={artist.name}
-                                    imageShape='rounded-full' />
-                            </Link>
+                            <MediaCard
+                                key={artist.id}
+                                image={artist.images[0].url}
+                                title={artist.name}
+                                href={`/artist/${artist.id}`} />
                         )
                     })}
                 </div>

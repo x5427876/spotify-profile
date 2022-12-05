@@ -39,7 +39,7 @@ const Home = () => {
                     <div className="mt-6 text-white font-bold text-5xl">{session?.user?.name}</div>
                     <div className="flex text-[#9B9B9B] w-[300px] text-[12px] mt-8">
                         <div className="w-1/3 flex flex-col justify-center items-center">
-                            <div className="text-spotify font-bold text-2xl">{followers}</div>
+                            <div className="text-spotify font-bold text-2xl">{followers || 0}</div>
                             <div>FOLLOWERS</div>
                         </div>
                         <div className="w-1/3 flex flex-col justify-center items-center">
