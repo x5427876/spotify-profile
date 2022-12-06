@@ -49,7 +49,7 @@ const Artist = () => {
                                 artist={track.album.artists[0].name}
                                 album={track.album.name}
                                 duration={track.duration_ms}
-                                link={`/album/${track.album.id}`} />
+                                link={track.uri} />
                         )
                     })}
                 </div>

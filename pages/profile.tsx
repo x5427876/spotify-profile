@@ -46,10 +46,12 @@ const Home = () => {
                             <div className="text-spotify font-bold text-2xl">{following}</div>
                             <div>FOLLOWING</div>
                         </div>
-                        <div className="w-1/3 flex flex-col justify-center items-center">
-                            <div className="text-spotify font-bold text-2xl">{playlist.length}</div>
-                            <div>PLAYLISTS</div>
-                        </div>
+                        <Link href='/playlists'>
+                            <div className="w-1/3 flex flex-col justify-center items-center cursor-pointer">
+                                <div className="text-spotify font-bold text-2xl">{playlist.length}</div>
+                                <div>PLAYLISTS</div>
+                            </div>
+                        </Link>
                     </div>
                     <div className='text-white mt-8 px-6 py-2 border border-white rounded-full cursor-pointer hover:bg-white hover:text-black transition'
                         onClick={() => signOut({ callbackUrl: `${window.location.origin}/login` })}>LOG OUT</div>
