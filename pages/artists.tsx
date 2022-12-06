@@ -40,7 +40,7 @@ const Artists = () => {
                         <TabButton isSelected={range === Range.short} onClick={() => setRange(Range.short)} title='Last 4 Weeks' />
                     </div>
                 </div>
-                <div className="mt-14 w-full grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[30px]">
+                <div className="mt-14 w-full grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[10px]">
                     {artistsList?.map(artist => {
                         return (
                             <MediaCard

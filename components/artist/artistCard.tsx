@@ -12,11 +12,11 @@ const ArtistCard: FC<Props> = ({ image, name, link }) => {
 
     return (
         <Link href={link}>
-            <div className="flex items-center mb-6 cursor-pointer"
+            <div className="flex items-center mb-2 cursor-pointer hover:bg-white/20 transition rounded-md p-2"
                 onMouseEnter={() => setIsHover(true)}
                 onMouseLeave={() => setIsHover(false)}>
                 <div className='flex justify-center items-center'>
-                    <img className={`rounded-full w-[50px] ${isHover && 'pic-hover-effect'}`} src={image} />
+                    <img className={`rounded-full w-[50px]`} src={image} />
                 </div>
                 <div className="ml-6 text-white text-lg cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap">{name}</div>
             </div>

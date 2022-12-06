@@ -34,7 +34,7 @@ const Recent = () => {
                                 artist={track.track.album.artists[0].name}
                                 album={track.track.album.name}
                                 duration={track.track.duration_ms}
-                                link={`/track/${track.track.id}`} />
+                                link={`/album/${track.track.album.id}`} />
                         )
                     })}
                 </div>

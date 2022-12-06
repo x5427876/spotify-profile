@@ -97,7 +97,7 @@ const Home = () => {
                                         artist={track.album.artists[0].name}
                                         album={track.album.name}
                                         duration={track.duration_ms}
-                                        link={`/track/${track.id}`} />
+                                        link={`/album/${track.album.id}`} />
                                 )
                             })}
                         </div>

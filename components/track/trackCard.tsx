@@ -17,10 +17,10 @@ const TrackCard: FC<Props> = ({ image, name, link, artist, album, duration }) =>
 
     return (
         <Link href={link || ''}>
-            <div className="flex items-center mb-6 cursor-pointer w-full"
+            <div className="flex items-center mb-2 cursor-pointer w-full p-2 hover:bg-white/20 transition rounded-md"
                 onMouseEnter={() => setIsHover(true)}
                 onMouseLeave={() => setIsHover(false)}>
-                {image && <img className={`w-[50px] h-[50px] ${isHover && 'pic-hover-effect'}`} src={image} />}
+                {image && <img className={`w-[50px] h-[50px]`} src={image} />}
                 <div className={`text-white flex items-center justify-between ${image ? 'w-[calc(100%-50px)] pl-6' : 'w-full'}`}>
                     <div className='flex flex-col w-[80%] overflow-hidden text-ellipsis whitespace-nowrap'>
                         <div className="cursor-pointer text-lg overflow-hidden text-ellipsis whitespace-nowrap">{name}</div>

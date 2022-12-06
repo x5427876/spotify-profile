@@ -18,7 +18,7 @@ const MediaCard: FC<Props> = ({ image, title, imageShape, href, subtitle, textal
     return (
         <Link href={href}>
             <div
-                className="flex flex-col justify-center items-center w-full cursor-pointer"
+                className="flex flex-col justify-center items-center w-full cursor-pointer p-[10px] hover:bg-white/20 transition rounded-md"
                 onMouseEnter={() => setIsHover(true)}
                 onMouseLeave={() => setIsHover(false)}>
                 {image ? <img className={`${imageShape || ''} ${isHover && 'opacity-50 transition ease-in-out'} w-full aspect-square`} src={image} /> : <BlankAlbumCover />}

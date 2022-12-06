@@ -24,7 +24,7 @@ const Playlists = () => {
         <>
             <div className='spotify-container'>
                 <div className="title">Playlists</div>
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[30px] w-full">
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[10px] w-full">
                     {playlists?.map((playlist) => {
                         return (
                             <MediaCard

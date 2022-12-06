@@ -12,42 +12,37 @@ const Track = () => {
     const { data: session } = useSession()
 
     const [isLoading, setIsLoading] = useState(true);
-    const [track, setTrack] = useState()
     const [album, setAlbum] = useState([])
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {
-            spotifyApi.getTracks([router.query.track])
-                .then((res) => {
-                    setTrack(res.body.tracks[0])
-                    return res.body.tracks[0].album.id
-                })
-                .then((albumId) => spotifyApi.getAlbum(albumId)
-                    .then((res) => setAlbum(res.body.tracks.items)))
+            spotifyApi.getAlbum([router.query.album])
+                .then((res) => setAlbum(res.body))
                 .then(() => setIsLoading(false))
         }
     }, [session, spotifyApi])
 
+    useEffect(() => {
+        console.log(album)
+    }, [album])
+
     return (
         <>
-            <div className='spotify-container'>
+            {album.images && <div className='spotify-container'>
                 <div className='w-full flex flex-col md:flex-row items-center md:items-start'>
-                    <img src={track?.album.images[0].url} className='aspect-square md:w-[30%] p-4 md:p-0' />
+                    <img src={album?.images[0]?.url} className='aspect-square md:w-[30%] max-w-[250px] p-4 md:p-0' />
                     <div className='flex flex-col items-center md:items-start justify-end md:pl-[20px] w-full md:w-[calc(70%-20px)] h-full'>
-                        <div className='font-bold text-4xl text-center md:text-left w-full overflow-hidden text-ellipsis whitespace-nowrap mt-8 md:mt-0'>
-                            {track?.album.name}
+                        <div className='text-sm'>
+                            {album?.album_type?.toUpperCase()}
                         </div>
-                        <div className='flex justify-center md:justify-start text-2xl mt-4 text-[#9B9B9B] overflow-hidden text-ellipsis whitespace-nowrap w-full'>
-                            {track?.artists[0].name}&nbsp;·&nbsp;&nbsp;{track?.album.release_date.slice(0, 4)}
+                        <div className='text-center md:text-start mt-4 text-white text-3xl md:text-6xl font-extrabold overflow-hidden text-ellipsis whitespace-nowrap w-full'>
+                            {album.name}
                         </div>
-                        <a href={track?.album.external_urls.spotify || ''} target="_blank"
-                            className='text-white mt-8 px-8 py-4 bg-[#1DB954] rounded-full font-bold cursor-pointer hover:brightness-110 transition ease-in-out'>
-                            PLAY ON SPOTIFY
-                        </a>
+                        <div className='mt-4'>{album.artists[0].name}&nbsp;·&nbsp;&nbsp;{album.release_date.slice(0, 4)}&nbsp;·&nbsp;&nbsp;{album.total_tracks} Song</div>
                     </div>
                 </div>
                 <div className='mt-10 w-full'>
-                    {album?.map((track) => {
+                    {album?.tracks?.items?.map((track) => {
                         return (
                             <TrackCard
                                 key={track.id}
@@ -55,11 +50,13 @@ const Track = () => {
                                 name={track.name}
                                 artist={track.artists.map(artist => { return artist.name })}
                                 album=''
-                                duration={track.duration_ms} />
+                                duration={track.duration_ms}
+                                link={track.uri}
+                            />
                         )
                     })}
                 </div>
-            </div>
+            </div>}
             <BlockUI isOpen={isLoading} />
         </>
     )

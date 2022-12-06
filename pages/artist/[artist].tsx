@@ -49,13 +49,13 @@ const Artist = () => {
                                 artist={track.album.artists[0].name}
                                 album={track.album.name}
                                 duration={track.duration_ms}
-                                link={`/track/${track.id}`} />
+                                link={`/album/${track.album.id}`} />
                         )
                     })}
                 </div>
                 <div className="w-full p-[5vw] md:p-[5vh]">
                     <div className="text-white font-bold text-3xl mb-6">Albums</div>
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[30px] w-full">
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[10px] w-full">
                         {albums?.map((album) => {
                             return (
                                 <MediaCard
@@ -64,7 +64,7 @@ const Artist = () => {
                                     title={album.name}
                                     subtitle={`${album.type} · ${album.release_date.slice(0, 4)}`}
                                     textalign='text-start'
-                                    href={`/playlist/${album.id}`} />
+                                    href={`/album/${album.id}`} />
                             )
                         })}
                     </div>
