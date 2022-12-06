@@ -32,12 +32,12 @@ const Track = () => {
         <>
             <div className='spotify-container'>
                 <div className='w-full flex flex-col md:flex-row items-center md:items-start'>
-                    <img src={track?.album.images[0].url} className='aspect-square md:mt-0 md:w-1/3 p-4 md:p-0' />
-                    <div className='flex flex-col items-center md:items-start md:ml-10 py-2'>
-                        <div className='font-bold text-4xl text-center md:text-left w-[90%] overflow-hidden text-ellipsis whitespace-nowrap mt-8 md:mt-0'>
+                    <img src={track?.album.images[0].url} className='aspect-square md:w-[30%] p-4 md:p-0' />
+                    <div className='flex flex-col items-center md:items-start justify-end md:pl-[20px] w-full md:w-[calc(70%-20px)] h-full'>
+                        <div className='font-bold text-4xl text-center md:text-left w-full overflow-hidden text-ellipsis whitespace-nowrap mt-8 md:mt-0'>
                             {track?.album.name}
                         </div>
-                        <div className='text-2xl mt-4 text-[#9B9B9B]'>
+                        <div className='flex justify-center md:justify-start text-2xl mt-4 text-[#9B9B9B] overflow-hidden text-ellipsis whitespace-nowrap w-full'>
                             {track?.artists[0].name}&nbsp;·&nbsp;&nbsp;{track?.album.release_date.slice(0, 4)}
                         </div>
                         <a href={track?.album.external_urls.spotify || ''} target="_blank"
@@ -46,19 +46,9 @@ const Track = () => {
                         </a>
                     </div>
                 </div>
-                <div className='mt-10'>
+                <div className='mt-10 w-full'>
                     {album?.map((track) => {
                         return (
-                            // <div className="flex items-center justify-between mb-6 w-full" key={track.id}>
-                            //     <div className="text-white text-lg flex flex-col max-w-[80%]">
-                            //         <div className={`w-auto overflow-hidden text-ellipsis whitespace-nowrap ${track.id === router.query.track && 'text-spotify'}`}>{track.name}</div>
-                            //         <div className="text-sm text-gray-400 overflow-hidden text-ellipsis whitespace-nowrap">
-                            //             {track.artists.map(artist => { return artist.name })}
-                            //         </div>
-                            //     </div>
-                            //     <div>{msToMinute(track.duration_ms)}</div>
-                            // </div>
-
                             <TrackCard
                                 key={track.id}
                                 image=''

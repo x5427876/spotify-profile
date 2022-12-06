@@ -18,7 +18,7 @@ const ArtistCard: FC<Props> = ({ image, name, link }) => {
                 <div className='flex justify-center items-center'>
                     <img className={`rounded-full w-[50px] ${isHover && 'pic-hover-effect'}`} src={image} />
                 </div>
-                <div className="ml-6 text-white text-lg cursor-pointer text-hover-effect overflow-hidden text-ellipsis whitespace-nowrap">{name}</div>
+                <div className="ml-6 text-white text-lg cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap">{name}</div>
             </div>
         </Link>
     )

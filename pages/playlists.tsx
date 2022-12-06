@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
-import Link from "next/link"
 
 import useSpotify from '../hooks/useSpotify'
 import BlockUI from "../components/blockUI";
-import BlankAlbumCover from "../components/blankAlbumCover"
 import MediaCard from "../components/mediaCard";
 
 const Playlists = () => {
@@ -29,17 +27,13 @@ const Playlists = () => {
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[30px] w-full">
                     {playlists?.map((playlist) => {
                         return (
-                            <Link href={`/playlist/${playlist.id}`} key={playlist.id}>
-                                <div className="text-white flex flex-col items-center">
-                                    {playlist?.images[0]?.url ?
-                                        <img src={playlist?.images[0]?.url} /> :
-                                        <div className="w-full">
-                                            <BlankAlbumCover />
-                                        </div>}
-                                    <div className="mt-4 overflow-hidden text-ellipsis whitespace-nowrap">{playlist.name}</div>
-                                    <div className="text-[#9B9B9B] text-sm">{playlist.tracks.total} Tracks</div>
-                                </div>
-                            </Link>
+                            <MediaCard
+                                key={playlist.id}
+                                image={playlist?.images[0]?.url || ''}
+                                title={playlist.name}
+                                subtitle={`${playlist.tracks.total} Tracks`}
+                                textalign='text-center'
+                                href={`/playlist/${playlist.id}`} />
                         )
                     })}
                 </div>
