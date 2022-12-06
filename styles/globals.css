@@ -4,7 +4,7 @@
 
 @layer components {
     .spotify-container {
-        @apply w-[100vw] h-[calc(100vh-70px)] pt-10 md:w-[calc(100vw-100px)] md:h-[100vh] md:ml-[100px] p-[5vw] bg-zinc-900 text-white flex flex-col overflow-y-scroll;
+        @apply w-[100vw] h-[calc(100vh-70px)] md:w-[calc(100vw-100px)] md:h-[100vh] md:ml-[100px] p-[5vw] bg-zinc-900 text-white flex flex-col overflow-y-scroll;
     }
 
     .spotify-container > .title {

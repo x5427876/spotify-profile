@@ -16,7 +16,9 @@ const Playlists = () => {
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {
-            spotifyApi.getUserPlaylists().then((res) => setPlaylists(res.body.items)).then(() => setIsLoading(false))
+            spotifyApi.getUserPlaylists()
+                .then((res) => setPlaylists(res.body.items))
+                .then(() => setIsLoading(false))
         }
     }, [session, spotifyApi])
 
@@ -27,7 +29,7 @@ const Playlists = () => {
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[30px] w-full">
                     {playlists?.map((playlist) => {
                         return (
-                            <Link href='/' key={playlist.id}>
+                            <Link href={`/playlist/${playlist.id}`} key={playlist.id}>
                                 <div className="text-white flex flex-col items-center">
                                     {playlist?.images[0]?.url ?
                                         <img src={playlist?.images[0]?.url} /> :

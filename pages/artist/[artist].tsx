@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
-import Link from 'next/link';
 
 import useSpotify from '../../hooks/useSpotify';
 import BlockUI from '../../components/blockUI';
-import BlankAlbumCover from '../../components/blankAlbumCover';
+import MediaCard from '../../components/mediaCard';
+import TrackCard from '../../components/track/trackCard';
 
 const Artist = () => {
     const router = useRouter()
@@ -39,23 +39,17 @@ const Artist = () => {
                     </div>
                 </div>
                 <div className="w-full p-[5vw] md:p-[5vh] mt-[5vw] md:mt-[5vh]">
-                    <div className="text-white font-bold text-3xl mb-8">Popular</div>
-                    {topTracks?.map((track, index) => {
+                    <div className="text-white font-bold text-3xl mb-6">Popular</div>
+                    {topTracks?.map((track) => {
                         return (
-                            <div className="w-[95%] flex items-center mb-6 overflow-hidden text-ellipsis whitespace-nowrap" key={track.id}>
-                                <div className='mr-6 text-xl'>{index + 1}</div>
-                                <div className='flex items-center w-full'>
-                                    <img className="w-[50px]" src={track.album.images[1].url} />
-                                    <div className="ml-6 text-white text-lg flex flex-col w-[75%]">
-                                        <div>
-                                            <div className="w-auto overflow-hidden text-ellipsis whitespace-nowrap">{track.name}</div>
-                                        </div>
-                                        <div className="text-sm text-gray-400 overflow-hidden text-ellipsis whitespace-nowrap">
-                                            {track.album.artists[0].name}&nbsp;·&nbsp;&nbsp;{track.album.name}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <TrackCard
+                                key={track.id}
+                                image={track.album.images[0].url}
+                                name={track.name}
+                                artist={track.album.artists[0].name}
+                                album={track.album.name}
+                                duration={track.duration_ms}
+                                link={`/track/${track.id}`} />
                         )
                     })}
                 </div>
@@ -64,16 +58,13 @@ const Artist = () => {
                     <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[30px] w-full">
                         {albums?.map((album) => {
                             return (
-                                <Link href='/a' key={album.id}>
-                                    <div className="text-white flex flex-col items-center">
-                                        {album?.images[0]?.url ?
-                                            <img src={album?.images[0]?.url} /> :
-                                            <div className="w-full">
-                                                <BlankAlbumCover />
-                                            </div>}
-                                        <div className="mt-4 overflow-hidden text-ellipsis whitespace-nowrap w-[90%] text-center">{album.name}</div>
-                                    </div>
-                                </Link>
+                                <MediaCard
+                                    key={album.id}
+                                    image={album?.images[0]?.url || ''}
+                                    title={album.name}
+                                    subtitle={`${album.type} · ${album.release_date.slice(0, 4)}`}
+                                    textalign='text-start'
+                                    href={`/playlist/${album.id}`} />
                             )
                         })}
                     </div>

@@ -1,13 +1,18 @@
 import { FC, useState } from 'react'
 import Link from 'next/link'
 
+import BlankAlbumCover from '../components/blankAlbumCover';
+
 interface Props {
-    image: string | FC;
+    image?: string | FC;
     title: string;
+    subtitle?: string;
     href: string;
+    imageShape?: string;
+    textalign?: string;
 }
 
-const MediaCard: FC<Props> = ({ image, title, imageShape, href }) => {
+const MediaCard: FC<Props> = ({ image, title, imageShape, href, subtitle, textalign }) => {
     const [isHover, setIsHover] = useState(false)
 
     return (
@@ -16,9 +21,10 @@ const MediaCard: FC<Props> = ({ image, title, imageShape, href }) => {
                 className="flex flex-col justify-center items-center w-full cursor-pointer"
                 onMouseEnter={() => setIsHover(true)}
                 onMouseLeave={() => setIsHover(false)}>
-                <img className={`${isHover && 'opacity-50 transition ease-in-out'} w-full aspect-square rounded-full`} src={image} />
-                <div className="text-md text-white my-4 overflow-hidden text-ellipsis whitespace-nowrap w-[80%] text-center">
-                    <span className='text-hover-effect'>{title}</span>
+                {image ? <img className={`${imageShape || ''} ${isHover && 'opacity-50 transition ease-in-out'} w-full aspect-square`} src={image} /> : <BlankAlbumCover />}
+                <div className={`text-md text-white mt-4 overflow-hidden text-ellipsis whitespace-nowrap w-full flex flex-col ${textalign || 'text-center'}`}>
+                    <div className='overflow-hidden text-ellipsis whitespace-nowrap'>{title}</div>
+                    {subtitle && <div className='text-[#9B9B9B] text-sm'>{subtitle}</div>}
                 </div>
             </div >
         </Link>

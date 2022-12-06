@@ -47,7 +47,8 @@ const Artists = () => {
                                 key={artist.id}
                                 image={artist.images[0].url}
                                 title={artist.name}
-                                href={`/artist/${artist.id}`} />
+                                href={`/artist/${artist.id}`}
+                                imageShape='rounded-full' />
                         )
                     })}
                 </div>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
-import Link from 'next/link'
 
 import useSpotify from '../hooks/useSpotify'
 import BlockUI from '../components/blockUI';
@@ -20,12 +19,6 @@ const Tracks = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [range, setRange] = useState(Range.long)
     const [tracks, setTracks] = useState([])
-
-    const msToMinute = (duration: number) => {
-        let minutes = Math.floor(duration / 60000);
-        let seconds = ((duration % 60000) / 1000).toFixed(0);
-        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-    }
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {
@@ -47,7 +40,7 @@ const Tracks = () => {
                     </div>
                 </div>
                 <div>
-                    {tracks?.map((track) => {
+                    {tracks?.map((track, index) => {
                         return (
                             <TrackCard
                                 key={track.id}
