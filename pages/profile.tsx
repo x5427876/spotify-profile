@@ -36,7 +36,7 @@ const Home = () => {
 
     return (
         <>
-            <div className='md:w-[calc(100vw-100px)] md:h-[100vh] w-full h-[calc(100vh-70px)] overflow-y-scroll bg-zinc-900 flex flex-col justify-start items-center pt-20 absolute top-0 md:left-[100px]'>
+            <div className='spotify-container'>
                 <div className='w-full h-full flex flex-col justify-start items-center'>
                     <img className="rounded-full w-[150px]" src={session?.user?.image as string} />
                     <div className="mt-6 text-white font-bold text-5xl">{session?.user?.name}</div>
