@@ -34,7 +34,7 @@ const Artist = () => {
 
     return (
         <>
-            <div className='w-[100vw] h-[calc(100vh-70px)] md:h-[100vh] md:w-[calc(100vw-100px)] md:ml-[100px] bg-zinc-900 text-white flex-col justify-start items-center overflow-y-scroll'>
+            <div className='w-[100vw] h-[calc(100vh-70px)] md:h-[100vh] md:w-[calc(100vw-100px)] bg-zinc-900 text-white flex-col justify-start items-center overflow-y-scroll'>
                 <div className='h-[40vh] w-full bg-cover bg-center flex items-end justify-between p-[4vw]' style={{ backgroundImage: `url(${artistImg})` }}>
                     <div className='backdrop-blur-sm max-w-[80%] p-[1vw] flex flex-col'>
                         <div className='text-3xl md:text-6xl font-extrabold'>{artist?.name}</div>
