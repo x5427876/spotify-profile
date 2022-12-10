@@ -60,7 +60,7 @@ const Home = () => {
                         onClick={() => signOut({ callbackUrl: `${window.location.origin}/login` })}>LOG OUT</div>
 
                 </div>
-                <div className="w-full px-[5vw] mt-16 flex flex-col md:flex-row justify-between">
+                <div className="w-full mt-16 flex flex-col md:flex-row justify-between">
                     <div className="w-full md:w-[45%] mb-8">
                         <div className="flex items-center justify-between">
                             <div className="text-white font-bold text-xl">Top Artist of All Time</div>

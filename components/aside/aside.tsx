@@ -18,7 +18,7 @@ const Aside = () => {
     return (
         <>
             {
-                isShowAside && <div className='md:h-[100vh] md:w-[100px] h-[70px] w-full bg-black flex md:flex-col justify-between items-center md:py-8 absolute top-[calc(100%-70px)] md:top-0'>
+                isShowAside && <div className='md:h-[100vh] md:w-[100px] h-[71px] w-full bg-black flex md:flex-col justify-between items-center md:py-8 absolute top-[calc(100%-70px)] md:top-0'>
                     <Link href='/profile' passHref legacyBehavior>
                         <SpotifySvg />
                     </Link>
