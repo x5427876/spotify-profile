@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import Router from 'next/router';
 
 import useSpotify from '../hooks/useSpotify'
 import BlockUI from '../components/blockUI';
@@ -22,9 +23,10 @@ const Tracks = () => {
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {
-            Promise.all([
-                spotifyApi.getMyTopTracks({ limit: 50, time_range: range }).then((res) => setTracks(res.body.items)),
-            ]).then(() => setIsLoading(false))
+            spotifyApi.getMyTopTracks({ limit: 50, time_range: range })
+                .then((res) => setTracks(res.body.items))
+                .then(() => setIsLoading(false))
+                .catch(() => Router.push('/login'))
         }
     }, [session, spotifyApi, range])
 

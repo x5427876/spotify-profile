@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import Router from 'next/router';
 
 import useSpotify from '../hooks/useSpotify'
 import BlockUI from "../components/blockUI";
@@ -17,6 +18,7 @@ const Playlists = () => {
             spotifyApi.getUserPlaylists()
                 .then((res) => setPlaylists(res.body.items))
                 .then(() => setIsLoading(false))
+                .catch(() => Router.push('/login'))
         }
     }, [session, spotifyApi])
 

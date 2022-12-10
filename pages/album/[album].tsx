@@ -22,13 +22,9 @@ const Track = () => {
         }
     }, [session, spotifyApi])
 
-    useEffect(() => {
-        console.log(album)
-    }, [album])
-
     return (
         <>
-            {album.images && <div className='spotify-container'>
+            {!isLoading && <div className='spotify-container'>
                 <div className='w-full flex flex-col md:flex-row items-center md:items-start'>
                     <img src={album?.images[0]?.url} className='aspect-square md:w-[30%] max-w-[250px] p-4 md:p-0' />
                     <div className='flex flex-col items-center md:items-start justify-end md:pl-[20px] w-full md:w-[calc(70%-20px)] h-full'>

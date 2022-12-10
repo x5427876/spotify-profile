@@ -1,6 +1,7 @@
 import { useSession, signOut } from "next-auth/react"
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Router from 'next/router';
 
 import useSpotify from '../hooks/useSpotify'
 import BlockUI from "../components/blockUI";
@@ -10,7 +11,7 @@ import TrackCard from "../components/track/trackCard";
 
 const Home = () => {
     const spotifyApi = useSpotify()
-    const { data: session, status } = useSession()
+    const { data: session } = useSession()
 
     const [isLoading, setIsLoading] = useState(true);
     const [followers, setFollowers] = useState(0);
@@ -27,7 +28,9 @@ const Home = () => {
                 spotifyApi.getFollowedArtists().then((res) => { setFollowing(res.body.artists.items.length) }),
                 spotifyApi.getMyTopArtists({ limit: 10, time_range: 'long_term' }).then((res) => setTopArtists(res.body.items)),
                 spotifyApi.getMyTopTracks({ limit: 10, time_range: 'long_term' }).then((res) => setTopTracks(res.body.items))
-            ]).then(() => setIsLoading(false))
+            ])
+                .then(() => setIsLoading(false))
+                .catch(() => Router.push('/login'))
         }
     }, [session])
 

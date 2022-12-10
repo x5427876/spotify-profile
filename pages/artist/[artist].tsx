@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
+import Router from 'next/router';
 
 import useSpotify from '../../hooks/useSpotify';
 import BlockUI from '../../components/blockUI';
@@ -25,7 +26,9 @@ const Artist = () => {
                 spotifyApi.getArtist(router.query.artist).then((res) => setArtist(res.body)),
                 spotifyApi.getArtistTopTracks(router.query.artist, 'US').then((res) => setTopTracks(res.body.tracks.slice(0, 5))),
                 spotifyApi.getArtistAlbums(router.query.artist, { limit: 6 }).then((res) => setAlbums(res.body.items))
-            ]).then(() => setIsLoading(false))
+            ])
+                .then(() => setIsLoading(false))
+                .catch(() => Router.push('/login'))
         }
     }, [session, spotifyApi])
 

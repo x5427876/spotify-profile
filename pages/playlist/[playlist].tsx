@@ -1,10 +1,12 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
-import Link from 'next/link'
+import Router from 'next/router';
 
 import useSpotify from '../../hooks/useSpotify'
 import BlockUI from '../../components/blockUI';
+import TrackCard from '../../components/track/trackCard'
+import { calcTotalTime } from '../../lib/utility';
 
 const Playlist = () => {
     const router = useRouter()
@@ -16,39 +18,6 @@ const Playlist = () => {
     const [totalTime, setTotaltime] = useState(0);
 
     useEffect(() => {
-        console.log(playlist)
-    }, [playlist])
-
-    const calcTotalTime = (list) => {
-        let total = 0;
-
-        list.forEach(track => {
-            total += track.track.duration_ms
-        });
-
-        console.log(convertMsToHM(total))
-
-        return convertMsToHM(total);
-    }
-
-    const convertMsToHM = (milliseconds) => {
-        let seconds = Math.floor(milliseconds / 1000);
-        let minutes = Math.floor(seconds / 60);
-        let hours = Math.floor(minutes / 60);
-
-        seconds = seconds % 60;
-        minutes = seconds >= 30 ? minutes + 1 : minutes;
-        minutes = minutes % 60;
-        hours = hours % 24;
-
-        return `${padTo2Digits(hours) > 0 ? padTo2Digits(hours) + ' hr ' : ''}${padTo2Digits(minutes) > 0 ? padTo2Digits(minutes) + ' min' : ' 0 min'}`;
-    }
-
-    const padTo2Digits = (num) => {
-        return num.toString().padStart(2, '');
-    }
-
-    useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {
             spotifyApi.getPlaylist(router.query.playlist)
                 .then((res) => {
@@ -56,29 +25,44 @@ const Playlist = () => {
                     setTotaltime(calcTotalTime(res.body.tracks.items))
                 })
                 .then(() => setIsLoading(false))
+                .catch(() => Router.push('/login'))
         }
     }, [session, spotifyApi])
 
     return (
         <>
-            <div className='spotify-container'>
-                <div className='flex h-full'>
-                    <div className='w-1/3 flex flex-col items-start md:items-start'>
-                        <img src={playlist?.images[0].url} className='aspect-square md:mt-0 md:w-full md:max-w-[300px] p-4 md:p-0' />
-                        <div className='flex flex-col items-center md:items-start mt-4 py-2 w-full overflow-hidden text-ellipsis whitespace-nowrap'>
-                            <div className='mb-2 text-sm'>PLAYLIST</div>
-                            <div className='font-bold text-2xl text-center md:text-left w-[90%] overflow-hidden text-ellipsis whitespace-nowrap mt-8 md:mt-0'>
-                                {playlist?.name}
-                            </div>
-                            <div className='text-md mt-4 text-[#9B9B9B]'>
-                                <span className='text-white'>{playlist?.tracks.total} Songs&nbsp;·&nbsp;&nbsp;</span>
-                                {totalTime}
-                            </div>
+            {!isLoading && <div className='spotify-container'>
+                <div className='w-full flex flex-col md:flex-row items-center md:items-start'>
+                    <img src={playlist?.images[0].url} className='aspect-square md:w-[30%] max-w-[250px] p-4 md:p-0' />
+                    <div className='flex flex-col items-center md:items-start justify-end md:pl-[20px] w-full md:w-[calc(70%-20px)] h-full'>
+                        <div className='text-sm'>
+                            PLAYLIST
+                        </div>
+                        <div className='text-center md:text-start mt-4 text-white text-3xl md:text-6xl font-extrabold overflow-hidden text-ellipsis whitespace-nowrap w-full'>
+                            {playlist?.name}
+                        </div>
+                        <div className='mt-4'>
+                            <span className='text-white'>{playlist?.tracks.total} Song&nbsp;·&nbsp;&nbsp;</span>
+                            {totalTime}
                         </div>
                     </div>
-                    <div className='w-2/3 flex flex-col'></div>
                 </div>
-            </div>
+                <div className='mt-10 w-full'>
+                    {playlist?.tracks?.items?.map((track) => {
+                        return (
+                            <TrackCard
+                                key={track.track.id}
+                                image={track.track.album.images[0].url}
+                                name={track.track.name}
+                                artist={track.track.artists.map(artist => { return artist.name })}
+                                album={track.track.album.name}
+                                duration={track.track.duration_ms}
+                                link={track.track.uri}
+                            />
+                        )
+                    })}
+                </div>
+            </div>}
             <BlockUI isOpen={isLoading} />
         </>
     )

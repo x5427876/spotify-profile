@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSession } from "next-auth/react"
-import Link from "next/link"
+import Router from 'next/router';
 
 import useSpotify from '../hooks/useSpotify'
 import TabButton from "../components/tab/tabButton"
@@ -23,9 +23,10 @@ const Artists = () => {
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {
-            Promise.all([
-                spotifyApi.getMyTopArtists({ limit: 50, time_range: range }).then((res) => setArtistsList(res.body.items)),
-            ]).then(() => setIsLoading(false))
+            spotifyApi.getMyTopArtists({ limit: 50, time_range: range })
+                .then((res) => setArtistsList(res.body.items))
+                .then(() => setIsLoading(false))
+                .catch(() => Router.push('/login'))
         }
     }, [session, spotifyApi, range])
 
@@ -40,7 +41,7 @@ const Artists = () => {
                         <TabButton isSelected={range === Range.short} onClick={() => setRange(Range.short)} title='Last 4 Weeks' />
                     </div>
                 </div>
-                <div className="mt-14 w-full grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[10px]">
+                <div className="mt-14 w-full grid md:grid-cols-[repeat(auto-fit,minmax(200px,_1fr))] grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[10px]">
                     {artistsList?.map(artist => {
                         return (
                             <MediaCard
