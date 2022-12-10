@@ -14,12 +14,12 @@ const Playlist = () => {
     const { data: session } = useSession()
 
     const [isLoading, setIsLoading] = useState(true);
-    const [playlist, setPlaylist] = useState();
-    const [totalTime, setTotaltime] = useState(0);
+    const [playlist, setPlaylist] = useState<SpotifyApi.SinglePlaylistResponse>();
+    const [totalTime, setTotaltime] = useState<string>();
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {
-            spotifyApi.getPlaylist(router.query.playlist)
+            spotifyApi.getPlaylist(router.query.playlist as string)
                 .then((res) => {
                     setPlaylist(res.body)
                     setTotaltime(calcTotalTime(res.body.tracks.items))
@@ -51,13 +51,13 @@ const Playlist = () => {
                     {playlist?.tracks?.items?.map((track) => {
                         return (
                             <TrackCard
-                                key={track.track.id}
-                                image={track.track.album.images[0].url}
-                                name={track.track.name}
-                                artist={track.track.artists.map(artist => { return artist.name })}
-                                album={track.track.album.name}
-                                duration={track.track.duration_ms}
-                                link={track.track.uri}
+                                key={track.track?.id}
+                                image={track.track?.album.images[0].url}
+                                name={track.track?.name as string}
+                                artist={track.track?.artists[0].name as string}
+                                album={track.track?.album.name as string}
+                                duration={track.track?.duration_ms as number}
+                                link={track.track?.uri}
                             />
                         )
                     })}

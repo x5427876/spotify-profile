@@ -19,7 +19,7 @@ const Tracks = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [range, setRange] = useState(Range.long)
-    const [tracks, setTracks] = useState([])
+    const [tracks, setTracks] = useState<SpotifyApi.TrackObjectFull[]>([])
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {

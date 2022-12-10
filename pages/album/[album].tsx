@@ -11,12 +11,12 @@ const Track = () => {
     const spotifyApi = useSpotify()
     const { data: session } = useSession()
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [album, setAlbum] = useState([])
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [album, setAlbum] = useState<SpotifyApi.SingleAlbumResponse>()
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {
-            spotifyApi.getAlbum([router.query.album])
+            spotifyApi.getAlbum(router.query.album as string)
                 .then((res) => setAlbum(res.body))
                 .then(() => setIsLoading(false))
         }
@@ -24,12 +24,12 @@ const Track = () => {
 
     return (
         <>
-            {!isLoading && <div className='spotify-container'>
+            {album && <div className='spotify-container'>
                 <div className='w-full flex flex-col md:flex-row items-center md:items-start'>
-                    <img src={album?.images[0]?.url} className='aspect-square md:w-[30%] max-w-[250px] p-4 md:p-0' />
+                    <img src={album.images[0]?.url} className='aspect-square md:w-[30%] max-w-[250px] p-4 md:p-0' />
                     <div className='flex flex-col items-center md:items-start justify-end md:pl-[20px] w-full md:w-[calc(70%-20px)] h-full'>
                         <div className='text-sm'>
-                            {album?.album_type?.toUpperCase()}
+                            {album.album_type?.toUpperCase()}
                         </div>
                         <div className='text-center md:text-start mt-4 text-white text-3xl md:text-6xl font-extrabold overflow-hidden text-ellipsis whitespace-nowrap w-full'>
                             {album.name}
@@ -44,7 +44,7 @@ const Track = () => {
                                 key={track.id}
                                 image=''
                                 name={track.name}
-                                artist={track.artists.map(artist => { return artist.name })}
+                                artist={track.artists[0].name}
                                 album=''
                                 duration={track.duration_ms}
                                 link={track.uri}

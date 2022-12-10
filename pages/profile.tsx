@@ -16,15 +16,15 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [followers, setFollowers] = useState(0);
     const [following, setFollowing] = useState(0);
-    const [playlist, setPlaylist] = useState([]);
-    const [topArtists, setTopArtists] = useState([])
-    const [topTracks, setTopTracks] = useState([])
+    const [playlist, setPlaylist] = useState<SpotifyApi.PlaylistObjectSimplified[]>([]);
+    const [topArtists, setTopArtists] = useState<SpotifyApi.ArtistObjectFull[]>([])
+    const [topTracks, setTopTracks] = useState<SpotifyApi.TrackObjectFull[]>([])
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {
             Promise.all([
                 spotifyApi.getUserPlaylists().then((res) => { setPlaylist(res.body.items) }),
-                spotifyApi.getMe().then((res) => { setFollowers(res.body.followers.total) }),
+                spotifyApi.getMe().then((res) => { setFollowers(res.body.followers?.total as number) }),
                 spotifyApi.getFollowedArtists().then((res) => { setFollowing(res.body.artists.items.length) }),
                 spotifyApi.getMyTopArtists({ limit: 10, time_range: 'long_term' }).then((res) => setTopArtists(res.body.items)),
                 spotifyApi.getMyTopTracks({ limit: 10, time_range: 'long_term' }).then((res) => setTopTracks(res.body.items))
@@ -38,7 +38,7 @@ const Home = () => {
         <>
             <div className='md:w-[calc(100vw-100px)] md:h-[100vh] w-full h-[calc(100vh-70px)] overflow-y-scroll bg-zinc-900 flex flex-col justify-start items-center pt-20 absolute top-0 md:left-[100px]'>
                 <div className='w-full h-full flex flex-col justify-start items-center'>
-                    <img className="rounded-full w-[150px]" src={session?.user?.image} />
+                    <img className="rounded-full w-[150px]" src={session?.user?.image as string} />
                     <div className="mt-6 text-white font-bold text-5xl">{session?.user?.name}</div>
                     <div className="flex text-[#9B9B9B] w-[300px] text-[12px] mt-8">
                         <div className="w-1/3 flex flex-col justify-center items-center">

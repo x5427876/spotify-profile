@@ -11,7 +11,7 @@ const Playlists = () => {
     const { data: session } = useSession()
 
     const [isLoading, setIsLoading] = useState(true);
-    const [playlists, setPlaylists] = useState([])
+    const [playlists, setPlaylists] = useState<SpotifyApi.PlaylistObjectSimplified[]>()
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {

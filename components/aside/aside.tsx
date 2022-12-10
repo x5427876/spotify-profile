@@ -8,7 +8,7 @@ import ListIcon from "../../assets/icons/list.svg"
 import TabButton from "./tabButton"
 
 import Link from "next/link"
-import { forwardRef } from 'react'
+import { forwardRef, LegacyRef } from 'react'
 import { useRouter } from 'next/router'
 
 const Aside = () => {
@@ -19,7 +19,7 @@ const Aside = () => {
         <>
             {
                 isShowAside && <div className='md:h-[100vh] md:w-[100px] h-[70px] w-full bg-black flex md:flex-col justify-between items-center md:py-8 absolute top-[calc(100vh-70px)] md:top-0'>
-                    <Link href='/profile'>
+                    <Link href='/profile' passHref legacyBehavior>
                         <SpotifySvg />
                     </Link>
                     <div className="flex md:flex-col md:h-1/2 w-full">
@@ -38,9 +38,10 @@ const Aside = () => {
     )
 }
 
+// @ts-ignore
 const SpotifySvg = forwardRef(({ onClick, href }, ref) => {
     return (
-        <a href={href} onClick={onClick} ref={ref}>
+        <a href={href} onClick={onClick} ref={ref as LegacyRef<HTMLAnchorElement>}>
             <SpotifyIcon width={50} className="hidden md:block cursor-pointer" />
         </a>
     )

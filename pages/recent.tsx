@@ -11,7 +11,7 @@ const Recent = () => {
     const { data: session } = useSession()
 
     const [isLoading, setIsLoading] = useState(true);
-    const [tracks, setTracks] = useState([])
+    const [tracks, setTracks] = useState<SpotifyApi.PlayHistoryObject[]>([])
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {

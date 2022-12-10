@@ -4,7 +4,7 @@ import Link from 'next/link'
 import BlankAlbumCover from '../components/blankAlbumCover';
 
 interface Props {
-    image?: string | FC;
+    image?: string;
     title: string;
     subtitle?: string;
     href: string;

@@ -14,18 +14,18 @@ const Artist = () => {
     const { data: session } = useSession()
 
     const [isLoading, setIsLoading] = useState(true);
-    const [artist, setArtist] = useState();
-    const [topTracks, setTopTracks] = useState([]);
-    const [albums, setAlbums] = useState([])
+    const [artist, setArtist] = useState<SpotifyApi.SingleArtistResponse>();
+    const [topTracks, setTopTracks] = useState<SpotifyApi.TrackObjectFull[]>();
+    const [albums, setAlbums] = useState<SpotifyApi.AlbumObjectSimplified[]>();
 
     const artistImg = artist?.images[0].url;
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session && router.query.artist) {
             Promise.all([
-                spotifyApi.getArtist(router.query.artist).then((res) => setArtist(res.body)),
-                spotifyApi.getArtistTopTracks(router.query.artist, 'US').then((res) => setTopTracks(res.body.tracks.slice(0, 5))),
-                spotifyApi.getArtistAlbums(router.query.artist, { limit: 6 }).then((res) => setAlbums(res.body.items))
+                spotifyApi.getArtist(router.query.artist as string).then((res) => setArtist(res.body)),
+                spotifyApi.getArtistTopTracks(router.query.artist as string, 'US').then((res) => setTopTracks(res.body.tracks.slice(0, 5))),
+                spotifyApi.getArtistAlbums(router.query.artist as string, { limit: 6 }).then((res) => setAlbums(res.body.items))
             ])
                 .then(() => setIsLoading(false))
                 .catch(() => Router.push('/login'))

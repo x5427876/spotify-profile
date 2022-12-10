@@ -19,7 +19,7 @@ const Artists = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [range, setRange] = useState(Range.long)
-    const [artistsList, setArtistsList] = useState([])
+    const [artistsList, setArtistsList] = useState<SpotifyApi.ArtistObjectFull[]>()
 
     useEffect(() => {
         if (spotifyApi.getAccessToken() && session) {

@@ -25,9 +25,7 @@ const TrackCard: FC<Props> = ({ image, name, link, artist, album, duration }) =>
                     <div className='flex flex-col w-[80%] overflow-hidden text-ellipsis whitespace-nowrap'>
                         <div className="cursor-pointer text-lg overflow-hidden text-ellipsis whitespace-nowrap">{name}</div>
                         <div className="text-sm text-gray-400 overflow-hidden text-ellipsis whitespace-nowrap">
-                            {artist}
-                            &nbsp;·&nbsp;&nbsp;
-                            {album}
+                            {`${artist}${album ? ' · ' + album : ''}`}
                         </div>
                     </div>
                     <div className='w-[15%] text-right text-[#9B9B9B]'>{msToMinute(duration)}</div>
