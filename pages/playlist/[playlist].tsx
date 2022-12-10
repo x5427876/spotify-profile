@@ -5,7 +5,7 @@ import Router from 'next/router';
 
 import useSpotify from '../../hooks/useSpotify'
 import BlockUI from '../../components/blockUI';
-import TrackCard from '../../components/track/trackCard'
+import TrackCard from '../../components/track/trackCard';
 import { calcTotalTime } from '../../lib/utility';
 
 const Playlist = () => {
