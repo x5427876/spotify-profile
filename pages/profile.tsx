@@ -30,9 +30,7 @@ const Home = () => {
                 spotifyApi.getMyTopTracks({ limit: 10, time_range: 'long_term' }).then((res) => setTopTracks(res.body.items))
             ])
                 .then(() => setIsLoading(false))
-                .catch(() => Router.push('/login'))
-        } else {
-            Router.push('/login')
+                .catch(() => Router.push('/error'))
         }
     }, [session])
 

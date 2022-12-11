@@ -18,7 +18,7 @@ const Playlists = () => {
             spotifyApi.getUserPlaylists()
                 .then((res) => setPlaylists(res.body.items))
                 .then(() => setIsLoading(false))
-                .catch(() => Router.push('/login'))
+                .catch(() => Router.push('/error'))
         } else {
             Router.push('/login')
         }

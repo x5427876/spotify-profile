@@ -25,7 +25,7 @@ const Playlist = () => {
                     setTotaltime(calcTotalTime(res.body.tracks.items))
                 })
                 .then(() => setIsLoading(false))
-                .catch(() => Router.push('/login'))
+                .catch(() => Router.push('/error'))
         } else {
             Router.push('/login')
         }

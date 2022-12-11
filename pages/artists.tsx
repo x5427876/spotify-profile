@@ -26,7 +26,7 @@ const Artists = () => {
             spotifyApi.getMyTopArtists({ limit: 50, time_range: range })
                 .then((res) => setArtistsList(res.body.items))
                 .then(() => setIsLoading(false))
-                .catch(() => Router.push('/login'))
+                .catch(() => Router.push('/error'))
         } else {
             Router.push('/login')
         }

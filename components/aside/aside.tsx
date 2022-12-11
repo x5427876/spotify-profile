@@ -13,7 +13,7 @@ import { useRouter } from 'next/router'
 
 const Aside = () => {
     const router = useRouter()
-    const isShowAside = router.pathname !== '/login' && router.pathname !== '/';
+    const isShowAside = router.pathname !== '/login' && router.pathname !== '/' && router.pathname !== '/error';
 
     return (
         <>

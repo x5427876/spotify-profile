@@ -28,7 +28,7 @@ const Artist = () => {
                 spotifyApi.getArtistAlbums(router.query.artist as string, { limit: 6 }).then((res) => setAlbums(res.body.items))
             ])
                 .then(() => setIsLoading(false))
-                .catch(() => Router.push('/login'))
+                .catch(() => Router.push('/error'))
         } else {
             Router.push('/login')
         }
