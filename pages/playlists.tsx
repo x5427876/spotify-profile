@@ -19,6 +19,8 @@ const Playlists = () => {
                 .then((res) => setPlaylists(res.body.items))
                 .then(() => setIsLoading(false))
                 .catch(() => Router.push('/login'))
+        } else {
+            Router.push('/login')
         }
     }, [session, spotifyApi])
 

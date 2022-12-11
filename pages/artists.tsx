@@ -27,6 +27,8 @@ const Artists = () => {
                 .then((res) => setArtistsList(res.body.items))
                 .then(() => setIsLoading(false))
                 .catch(() => Router.push('/login'))
+        } else {
+            Router.push('/login')
         }
     }, [session, spotifyApi, range])
 

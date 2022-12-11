@@ -31,6 +31,8 @@ const Home = () => {
             ])
                 .then(() => setIsLoading(false))
                 .catch(() => Router.push('/login'))
+        } else {
+            Router.push('/login')
         }
     }, [session])
 

@@ -19,6 +19,8 @@ const Recent = () => {
                 .then((res) => setTracks(res.body.items))
                 .then(() => setIsLoading(false))
                 .catch(() => Router.push('/login'))
+        } else {
+            Router.push('/login')
         }
     }, [session, spotifyApi])
 
