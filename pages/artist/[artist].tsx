@@ -38,7 +38,7 @@ const ArtistHeader: FC<ArtistHeaderProps> = ({ name, followers, image }) => {
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/50 to-black/100 pointer-events-none" />
-      <div className="backdrop-blur-sm max-w-[80%] p-[1vw] flex flex-col relative z-10">
+      <div className="max-w-[80%] p-[1vw] flex flex-col relative z-10">
         <div className="text-3xl md:text-6xl font-extrabold text-white">
           {name}
         </div>
