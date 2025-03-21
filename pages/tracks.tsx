@@ -1,89 +1,95 @@
+import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import SpotifyWebApi from "spotify-web-api-node";
+import { useState } from "react";
 import BlockUI from "../components/blockUI";
-import TabButton from "../components/tab/tabButton";
+import NoDataMessage from "../components/noData";
 import TrackCard from "../components/track/trackCard";
-import useSpotify from "../hooks/useSpotify";
 
-enum Range {
-  short = "short_term",
-  mid = "medium_term",
-  long = "long_term",
-}
+type Term = "short_term" | "medium_term" | "long_term";
 
 interface TracksProps {
   initialTracks: SpotifyApi.TrackObjectFull[];
-  initialRange: Range;
 }
 
-const Tracks = ({ initialTracks, initialRange }: TracksProps) => {
-  const router = useRouter();
-  const spotifyApi = useSpotify();
-  const currentRange = (router.query.range as Range) || Range.long;
+// 獲取歌曲數據的函數
+const fetchTracks = async (
+  term: Term
+): Promise<SpotifyApi.TrackObjectFull[]> => {
+  const response = await fetch(`/api/tracks?timeRange=${term}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch tracks");
+  }
+
+  const { tracks } = await response.json();
+
+  return tracks;
+};
+
+const Tracks = ({ initialTracks }: TracksProps) => {
+  const [selectedTerm, setSelectedTerm] = useState<Term>("long_term");
 
   const { data: tracks, isLoading } = useQuery({
-    queryKey: ["topTracks", currentRange],
-    queryFn: async () => {
-      const response = await spotifyApi.getMyTopTracks({
-        limit: 50,
-        time_range: currentRange,
-      });
-      return response.body.items;
-    },
-    initialData: currentRange === initialRange ? initialTracks : undefined,
-    enabled: !!spotifyApi.getAccessToken(),
+    queryKey: ["tracks", selectedTerm],
+    queryFn: () => fetchTracks(selectedTerm),
+    initialData: selectedTerm === "long_term" ? initialTracks : undefined,
   });
 
-  const handleRangeChange = (newRange: Range) => {
-    router.push(
-      {
-        pathname: "/tracks",
-        query: { range: newRange },
-      },
-      undefined,
-      { shallow: true }
-    );
+  const handleTermChange = (term: Term) => {
+    setSelectedTerm(term);
   };
 
   return (
     <>
       <div className="spotify-container">
-        <div className="w-full text-white flex flex-col md:flex-row justify-center md:justify-between items-center mb-10">
-          <div className="flex font-bold text-2xl">Top Tracks</div>
-          <div className="flex mt-6 md:mt-0">
-            <TabButton
-              isSelected={currentRange === Range.long}
-              onClick={() => handleRangeChange(Range.long)}
-              title="All Time"
-            />
-            <TabButton
-              isSelected={currentRange === Range.mid}
-              onClick={() => handleRangeChange(Range.mid)}
-              title="Last 6 Months"
-            />
-            <TabButton
-              isSelected={currentRange === Range.short}
-              onClick={() => handleRangeChange(Range.short)}
-              title="Last 4 Weeks"
-            />
+        <div className="mb-8 text-2xl font-bold text-white">Top Tracks</div>
+
+        {/* 時間範圍選擇按鈕 */}
+        <div className="mb-10 flex justify-start gap-4">
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            <Button
+              onClick={() => handleTermChange("long_term")}
+              className={`flex-shrink-0 rounded-full border border-white px-6 text-xs text-white transition hover:bg-white hover:text-black
+                ${selectedTerm === "long_term" ? "bg-white text-black" : ""}`}
+            >
+              All Time
+            </Button>
+
+            <Button
+              onClick={() => handleTermChange("medium_term")}
+              className={`flex-shrink-0 rounded-full border border-white px-6 text-xs text-white transition hover:bg-white hover:text-black
+                ${selectedTerm === "medium_term" ? "bg-white text-black" : ""}`}
+            >
+              Last 6 Months
+            </Button>
+            <Button
+              onClick={() => handleTermChange("short_term")}
+              className={`flex-shrink-0 rounded-full border border-white px-6 text-xs text-white transition hover:bg-white hover:text-black  
+                ${selectedTerm === "short_term" ? "bg-white text-black" : ""}`}
+            >
+              Last 4 Weeks
+            </Button>
           </div>
         </div>
-        <div>
-          {tracks?.map((track) => (
-            <TrackCard
-              key={track.id}
-              image={track.album.images[0].url}
-              name={track.name}
-              artist={track.album.artists[0].name}
-              album={track.album.name}
-              duration={track.duration_ms}
-              link={`/album/${track.album.id}`}
-            />
-          ))}
-        </div>
+
+        {/* 歌曲列表 */}
+        {!tracks?.length ? (
+          <NoDataMessage message="No tracks data" />
+        ) : (
+          <div className="w-full">
+            {tracks.map((track) => (
+              <TrackCard
+                key={track.id}
+                image={track.album.images[1]?.url || "/placeholder.png"}
+                name={track.name}
+                artist={track.artists.map((a) => a.name).join(", ")}
+                album={track.album.name}
+                duration={track.duration_ms}
+                link={`/album/${track.album.id}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
       <BlockUI isOpen={isLoading} />
     </>
@@ -91,38 +97,26 @@ const Tracks = ({ initialTracks, initialRange }: TracksProps) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  const range = (context.query.range as Range) || Range.long;
-
   try {
-    const spotifyApi = new SpotifyWebApi({
-      clientId: process.env.SPOTIFY_CLIENT_ID,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-      accessToken: session.user?.accessToken as string,
-    });
+    const headers = { cookie: context.req.headers.cookie || "" };
 
-    const data = await spotifyApi.getMyTopTracks({
-      limit: 50,
-      time_range: range,
-    });
+    const tracksResponse = await fetch(
+      `${process.env.API_BASE_URL}/api/tracks?timeRange=long_term`,
+      {
+        headers,
+      }
+    );
+
+    const { tracks } = await tracksResponse.json();
 
     return {
       props: {
-        initialTracks: data.body.items,
-        initialRange: range,
+        initialTracks: tracks,
       },
     };
   } catch (error) {
+    console.error("Error fetching tracks:", error);
+
     return {
       redirect: {
         destination: "/error",

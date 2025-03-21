@@ -7,18 +7,18 @@ const Login = () => {
 
   useEffect(() => {
     if (session) {
-      Router.push("/profile");
+      Router.push("/");
     }
-  }, []);
+  }, [session]);
 
   return (
-    <div className="w-[100vw] h-[100vh] bg-zinc-900 flex flex-col justify-center items-center">
-      <div className="text-white font-bold text-3xl">Spotify Profile</div>
+    <div className="flex h-screen w-screen flex-col items-center justify-center bg-zinc-900">
+      <div className="text-3xl font-bold text-white">Spotify Profile</div>
       <div
-        className="text-white mt-8 px-8 py-4 bg-[#1DB954] rounded-full font-bold cursor-pointer"
+        className="mt-8 flex h-10 cursor-pointer items-center justify-center rounded-full bg-spotify px-8 font-bold text-white"
         onClick={() =>
           signIn("spotify", {
-            callbackUrl: `${window.location.origin}/profile`,
+            callbackUrl: `${window.location.origin}/`,
           })
         }
       >

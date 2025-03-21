@@ -1,60 +1,72 @@
+import { useQuery } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
-import SpotifyWebApi from "spotify-web-api-node";
+import BlockUI from "../components/blockUI";
+import NoDataMessage from "../components/noData";
 import TrackCard from "../components/track/trackCard";
 
 interface RecentProps {
-  tracks: SpotifyApi.PlayHistoryObject[];
-  error?: string;
+  initialTracks: SpotifyApi.PlayHistoryObject[];
 }
 
-const Recent = ({ tracks }: RecentProps) => {
+// 獲取最近播放記錄的函數
+const fetchRecentTracks = async () => {
+  const response = await fetch(`/api/recent`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch recent tracks");
+  }
+  const data = await response.json();
+  return data.tracks;
+};
+
+const Recent = ({ initialTracks }: RecentProps) => {
+  const { data: tracks, isLoading } = useQuery({
+    queryKey: ["recentTracks"],
+    queryFn: fetchRecentTracks,
+    initialData: initialTracks,
+  });
+
   return (
     <div className="spotify-container">
-      <div className="title">Recently Played Tracks</div>
-      <div>
-        {tracks?.map((track, index) => {
-          return (
-            <TrackCard
-              key={`${track.track.id}_${index}`}
-              image={track.track.album.images[0].url}
-              name={track.track.name}
-              artist={track.track.album.artists[0].name}
-              album={track.track.album.name}
-              duration={track.track.duration_ms}
-              link={`/album/${track.track.album.id}`}
-            />
-          );
-        })}
+      <div className="mb-8 text-2xl font-bold text-white">
+        Recently Played Tracks
       </div>
+      {!tracks?.length ? (
+        <NoDataMessage message="暫無最近播放記錄" />
+      ) : (
+        <div className="w-full">
+          {tracks.map((track, index) => {
+            return (
+              <TrackCard
+                key={`${track.track.id}_${index}`}
+                image={track.track.album.images[0].url}
+                name={track.track.name}
+                artist={track.track.album.artists[0].name}
+                album={track.track.album.name}
+                duration={track.track.duration_ms}
+                link={`/album/${track.track.album.id}`}
+              />
+            );
+          })}
+        </div>
+      )}
+      <BlockUI isOpen={isLoading} />
     </div>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
   try {
-    const spotifyApi = new SpotifyWebApi({
-      clientId: process.env.SPOTIFY_CLIENT_ID,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-      accessToken: session.user?.accessToken as string,
+    const response = await fetch(`${process.env.API_BASE_URL}/api/recent`, {
+      headers: {
+        cookie: context.req.headers.cookie || "",
+      },
     });
 
-    const data = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 20 });
+    const { tracks } = await response.json();
 
     return {
       props: {
-        tracks: data.body.items,
+        initialTracks: tracks,
       },
     };
   } catch (error) {

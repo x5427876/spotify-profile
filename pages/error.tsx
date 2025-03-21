@@ -1,17 +1,19 @@
-import React from 'react'
-import Link from 'next/link'
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Error = () => {
-    return (
-        <div className='w-[100vw] h-[100vh] bg-zinc-900 flex flex-col justify-center items-center'>
-            <div className='text-white text-3xl'>Oops! Something went wrong, please login again.</div>
-            <Link href='/login'>
-                <div className='text-white mt-8 px-8 py-4 bg-[#1DB954] rounded-full font-bold cursor-pointer'>
-                    BACK TO LOGIN PAGE
-                </div>
-            </Link>
-        </div>
-    )
-}
+  return (
+    <div className="flex h-screen flex-col items-center justify-center space-y-8 bg-zinc-900 px-8">
+      <div className="text-center text-3xl text-white">
+        Oops! Something went wrong.
+      </div>
+      <Link href="/login">
+        <Button className="rounded-full border border-white px-6 text-xs text-white transition hover:bg-white hover:text-black">
+          BACK TO LOGIN PAGE
+        </Button>
+      </Link>
+    </div>
+  );
+};
 
-export default Error
+export default Error;

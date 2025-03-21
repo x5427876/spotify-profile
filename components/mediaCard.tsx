@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 
-// 常量定義
+/**
+ * 主題常量
+ */
 const THEME = {
   colors: {
     primary: "#1DB954",
@@ -17,12 +19,15 @@ const THEME = {
     card: "10px",
     image: "4px",
     content: "4",
+    border: "4px",
   },
 } as const;
 
-// 類型定義
+/**
+ * 類型定義
+ */
 type TextAlign = "text-left" | "text-center";
-type BorderRadius = "rounded-full" | "rounded-none";
+type BorderRadius = "rounded-full" | "rounded-none" | "rounded-lg";
 
 interface MediaCardProps {
   image?: string;
@@ -44,53 +49,120 @@ interface MediaCardContentProps {
   textAlign: TextAlign;
 }
 
-// 圖片組件
+/**
+ * 將邊界半徑轉換為CSS值
+ */
+const getBorderRadiusValue = (radius: BorderRadius): string =>
+  radius === "rounded-full" ? "9999px" : "0px";
+
+/**
+ * 媒體卡片圖片組件
+ */
 const MediaCardImage: FC<MediaCardImageProps> = ({
   image,
   borderRadius = "rounded-full",
 }) => {
-  const getBorderRadiusValue = (radius: BorderRadius) =>
-    radius === "rounded-full" ? "9999px" : "0px";
+  // 使用客戶端渲染來避免水合不匹配
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // 緩存邊界半徑值
+  const radiusValue = getBorderRadiusValue(borderRadius);
+
+  // 圖片容器類名
+  const imageContainerClassName = `
+    overflow-hidden 
+    aspect-square 
+    ${borderRadius} 
+    transition-all 
+    duration-300
+    p-[${THEME.spacing.image}]
+  `;
+
+  // 邊框效果類名
+  const borderEffectClassName = `
+    absolute 
+    inset-0 
+    ${borderRadius} 
+    opacity-0 
+    group-hover:opacity-100 
+    pointer-events-none
+    transition-all
+    duration-300
+  `;
 
   return (
-    <div
-      className={`overflow-hidden aspect-square ${borderRadius} transition-all duration-300 group-hover:bg-[${THEME.colors.primary}] p-[${THEME.spacing.image}]`}
-    >
-      <Image
-        src={image || ""}
-        alt="artist image"
-        width={300}
-        height={300}
-        priority
+    <div className="relative">
+      {/* 圖片容器 */}
+      <div className={imageContainerClassName}>
+        {isMounted ? (
+          <Image
+            src={image || ""}
+            alt="artist image"
+            width={300}
+            height={300}
+            priority
+            className="h-full w-full object-cover"
+            style={{
+              borderRadius: radiusValue,
+              transition: THEME.transition.hover,
+            }}
+          />
+        ) : (
+          <div
+            className="h-full w-full bg-gray-800"
+            style={{ borderRadius: radiusValue }}
+          />
+        )}
+      </div>
+
+      {/* Hover 邊框效果 */}
+      <div
+        className={borderEffectClassName}
         style={{
-          borderRadius: getBorderRadiusValue(borderRadius),
+          boxShadow: `0 0 0 ${THEME.spacing.border} ${THEME.colors.primary}`,
+          transform: "scale(1.02)",
         }}
       />
     </div>
   );
 };
 
-// 內容組件
+/**
+ * 媒體卡片內容組件
+ */
 const MediaCardContent: FC<MediaCardContentProps> = ({
   title,
   subtitle,
   textAlign = "text-center",
-}) => (
-  <div
-    className={`text-[${THEME.colors.textPrimary}] mt-${THEME.spacing.content} w-full flex flex-col ${textAlign}`}
-  >
-    <div className="overflow-hidden text-ellipsis whitespace-nowrap">
-      {title}
-    </div>
-    {subtitle && (
-      <div className={`text-[${THEME.colors.textSecondary}] text-sm`}>
-        {subtitle}
-      </div>
-    )}
-  </div>
-);
+}) => {
+  const contentClassName = `
+    w-full 
+    flex 
+    flex-col 
+    ${textAlign} 
+    mt-${THEME.spacing.content}
+  `;
 
-// 主卡片組件
+  const titleClassName = "overflow-hidden text-ellipsis whitespace-nowrap";
+  const subtitleClassName = `text-[${THEME.colors.textSecondary}] text-sm`;
+
+  return (
+    <div
+      className={contentClassName}
+      style={{ color: THEME.colors.textPrimary }}
+    >
+      <div className={titleClassName}>{title}</div>
+      {subtitle && <div className={subtitleClassName}>{subtitle}</div>}
+    </div>
+  );
+};
+
+/**
+ * 主媒體卡片組件
+ */
 const MediaCard: FC<MediaCardProps> = ({
   image,
   title,
@@ -99,22 +171,23 @@ const MediaCard: FC<MediaCardProps> = ({
   textAlign = "text-center",
   borderRadius = "rounded-full",
 }) => {
+  const cardClassName = `
+    flex 
+    flex-col 
+    justify-center 
+    items-center 
+    w-full 
+    cursor-pointer 
+    p-[${THEME.spacing.card}] 
+    transition-all 
+    duration-150 
+    ease-in-out
+    group
+  `;
+
   return (
     <Link href={href}>
-      <div
-        className={`
-          group 
-          flex flex-col 
-          justify-center 
-          items-center 
-          w-full 
-          cursor-pointer 
-          p-[${THEME.spacing.card}] 
-          transition-all 
-          duration-150 
-          ease-in-out
-        `}
-      >
+      <div className={cardClassName}>
         <MediaCardImage image={image} borderRadius={borderRadius} />
         <MediaCardContent
           title={title}

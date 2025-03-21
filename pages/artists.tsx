@@ -1,159 +1,119 @@
+import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
-import type { Session } from "next-auth";
-import { getSession } from "next-auth/react";
 import { useState } from "react";
-
-import SpotifyWebApi from "spotify-web-api-node";
 import BlockUI from "../components/blockUI";
 import MediaCard from "../components/mediaCard";
-import TabButton from "../components/tab/tabButton";
+import NoDataMessage from "../components/noData";
 
-enum TimeRange {
-  SHORT_TERM = "short_term",
-  MEDIUM_TERM = "medium_term",
-  LONG_TERM = "long_term",
-}
+type Term = "short_term" | "medium_term" | "long_term";
 
-interface TimeRangeOption {
-  value: TimeRange;
-  title: string;
-}
-
-const TIME_RANGE_OPTIONS: TimeRangeOption[] = [
-  { value: TimeRange.LONG_TERM, title: "All Time" },
-  { value: TimeRange.MEDIUM_TERM, title: "Last 6 Months" },
-  { value: TimeRange.SHORT_TERM, title: "Last 4 Weeks" },
-];
-
-const ARTISTS_LIMIT = 50;
-
-interface ArtistsPageProps {
+interface ArtistsProps {
   initialArtists: SpotifyApi.ArtistObjectFull[];
-  initialTimeRange: TimeRange;
 }
 
-interface HeaderProps {
-  selectedRange: TimeRange;
-  onRangeChange: (range: TimeRange) => void;
-}
-
-const Header = ({ selectedRange, onRangeChange }: HeaderProps) => (
-  <div className="w-full text-white flex flex-col md:flex-row justify-center md:justify-between items-center">
-    <div className="flex font-bold text-2xl">Top Artists</div>
-    <div className="flex mt-6 md:mt-0">
-      {TIME_RANGE_OPTIONS.map(({ value, title }) => (
-        <TabButton
-          key={value}
-          isSelected={selectedRange === value}
-          onClick={() => onRangeChange(value)}
-          title={title}
-        />
-      ))}
-    </div>
-  </div>
-);
-
-interface ArtistsGridProps {
-  artists: SpotifyApi.ArtistObjectFull[];
-}
-
-const NoDataMessage = () => (
-  <div className="h-full w-full flex flex-col items-center justify-center text-white">
-    <div className="text-2xl font-bold">No Data</div>
-  </div>
-);
-
-const ArtistsGrid = ({ artists }: ArtistsGridProps) => {
-  if (!artists?.length) {
-    return <NoDataMessage />;
+// 獲取藝術家數據的函數
+const fetchArtists = async (
+  term: Term
+): Promise<SpotifyApi.ArtistObjectFull[]> => {
+  const response = await fetch(`/api/artists?timeRange=${term}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch artists");
   }
 
-  return (
-    <div className="mt-14 grid lg:grid-cols-6 md:grid-cols-4 grid-cols-2 gap-8">
-      {artists.map((artist) => (
-        <MediaCard
-          key={artist.id}
-          image={artist.images[0].url}
-          title={artist.name}
-          href={`/artist/${artist.id}`}
-        />
-      ))}
-    </div>
-  );
+  const { artists } = await response.json();
+
+  return artists;
 };
 
-interface ExtendedSession extends Session {
-  accessToken?: string;
-}
+const Artists = ({ initialArtists }: ArtistsProps) => {
+  const [selectedTerm, setSelectedTerm] = useState<Term>("long_term");
 
-const Artists = ({ initialArtists, initialTimeRange }: ArtistsPageProps) => {
-  const [selectedRange, setSelectedRange] =
-    useState<TimeRange>(initialTimeRange);
-  const [artists, setArtists] =
-    useState<SpotifyApi.ArtistObjectFull[]>(initialArtists);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data: artists, isLoading } = useQuery({
+    queryKey: ["artists", selectedTerm],
+    queryFn: () => fetchArtists(selectedTerm),
+    initialData: selectedTerm === "long_term" ? initialArtists : undefined,
+  });
 
-  const handleRangeChange = async (range: TimeRange) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`/api/artists?timeRange=${range}`);
-      const data = await response.json();
-      setArtists(data.artists);
-      setSelectedRange(range);
-    } catch (error) {
-      console.error("Failed to fetch artists:", error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleTermChange = (term: Term) => {
+    setSelectedTerm(term);
   };
 
   return (
     <>
       <div className="spotify-container">
-        <Header
-          selectedRange={selectedRange}
-          onRangeChange={handleRangeChange}
-        />
-        <ArtistsGrid artists={artists} />
+        <div className="mb-8 text-2xl font-bold text-white">Top Artists</div>
+
+        {/* 時間範圍選擇按鈕 */}
+        <div className="mb-10 flex justify-start gap-4">
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            <Button
+              onClick={() => handleTermChange("long_term")}
+              className={`flex-shrink-0 rounded-full border border-white px-6 text-xs text-white transition hover:bg-white hover:text-black
+                ${selectedTerm === "long_term" ? "bg-white text-black" : ""}`}
+            >
+              All Time
+            </Button>
+
+            <Button
+              onClick={() => handleTermChange("medium_term")}
+              className={`flex-shrink-0 rounded-full border border-white px-6 text-xs text-white transition hover:bg-white hover:text-black
+                ${selectedTerm === "medium_term" ? "bg-white text-black" : ""}`}
+            >
+              Last 6 Months
+            </Button>
+            <Button
+              onClick={() => handleTermChange("short_term")}
+              className={`flex-shrink-0 rounded-full border border-white px-6 text-xs text-white transition hover:bg-white hover:text-black  
+                ${selectedTerm === "short_term" ? "bg-white text-black" : ""}`}
+            >
+              Last 4 Weeks
+            </Button>
+          </div>
+        </div>
+
+        {/* 藝術家列表 */}
+        {!artists?.length ? (
+          <NoDataMessage message="No artists data" />
+        ) : (
+          <div className="grid w-full grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-6">
+            {artists.map((artist) => (
+              <MediaCard
+                key={artist.id}
+                image={artist.images[1]?.url || "/placeholder.png"}
+                title={artist.name}
+                href={`/artist/${artist.id}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
       <BlockUI isOpen={isLoading} />
     </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps<ArtistsPageProps> = async (
-  context
-) => {
-  const session = (await getSession(context)) as ExtendedSession;
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
+export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const spotifyApi = new SpotifyWebApi({
-      clientId: process.env.SPOTIFY_CLIENT_ID,
-      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-      accessToken: session.user?.accessToken as string,
-    });
+    const headers = { cookie: context.req.headers.cookie || "" };
 
-    const response = await spotifyApi.getMyTopArtists({
-      limit: ARTISTS_LIMIT,
-      time_range: TimeRange.LONG_TERM,
-    });
+    const artistsResponse = await fetch(
+      `${process.env.API_BASE_URL}/api/artists?timeRange=long_term`,
+      {
+        headers,
+      }
+    );
+
+    const { artists } = await artistsResponse.json();
 
     return {
       props: {
-        initialArtists: response.body.items,
-        initialTimeRange: TimeRange.LONG_TERM,
+        initialArtists: artists,
       },
     };
   } catch (error) {
+    console.error("Error fetching artists:", error);
+
     return {
       redirect: {
         destination: "/error",

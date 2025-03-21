@@ -1,11 +1,14 @@
 import { GetServerSideProps } from "next";
 import type { Session } from "next-auth";
-import { getSession } from "next-auth/react";
-import SpotifyWebApi from "spotify-web-api-node";
+import { FC } from "react";
 
 import MediaCard from "../../components/mediaCard";
+import NoDataMessage from "../../components/noData";
 import TrackCard from "../../components/track/trackCard";
 
+/**
+ * 介面定義
+ */
 interface ArtistPageProps {
   artist: SpotifyApi.SingleArtistResponse;
   topTracks: SpotifyApi.TrackObjectFull[];
@@ -16,42 +19,81 @@ interface ExtendedSession extends Session {
   accessToken?: string;
 }
 
-const Artist = ({ artist, topTracks, albums }: ArtistPageProps) => {
-  const artistImg = artist?.images[0]?.url;
+/**
+ * 藝術家頁面橫幅組件
+ */
+interface ArtistHeaderProps {
+  name: string;
+  followers: number;
+  image?: string;
+}
 
+const ArtistHeader: FC<ArtistHeaderProps> = ({ name, followers, image }) => {
   return (
-    <div className="w-[100vw] h-[calc(100vh-70px)] md:h-[100vh] md:w-[calc(100vw-100px)] bg-zinc-900 text-white flex-col justify-start items-center overflow-y-scroll">
-      <div
-        className="h-[40vh] w-full bg-cover bg-center flex items-end justify-between p-[4vw] relative"
-        style={{ backgroundImage: `url(${artistImg})` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/0  via-black/50 to-black/100 pointer-events-none" />
-        <div className="backdrop-blur-sm max-w-[80%] p-[1vw] flex flex-col relative z-10">
-          <div className="text-3xl md:text-6xl font-extrabold">
-            {artist?.name}
-          </div>
-          <div className="text-lg md:text-xl mt-2">
-            {artist?.followers.total.toLocaleString()} Monthly Listeners
-          </div>
+    <div
+      className="h-[40vh] w-full bg-cover bg-center flex items-end justify-between p-[4vw] relative"
+      style={{ backgroundImage: `url(${image})` }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/50 to-black/100 pointer-events-none" />
+      <div className="backdrop-blur-sm max-w-[80%] p-[1vw] flex flex-col relative z-10">
+        <div className="text-3xl md:text-6xl font-extrabold text-white">
+          {name}
+        </div>
+        <div className="text-lg md:text-xl mt-2 text-white">
+          {followers.toLocaleString()} Monthly Listeners
         </div>
       </div>
-      <div className="w-full p-[5vw] md:p-[5vh] mt-[5vw] md:mt-[5vh]">
-        <div className="text-white font-bold text-3xl mb-6">熱門歌曲</div>
-        {topTracks?.map((track) => (
-          <TrackCard
-            key={track.id}
-            image={track.album.images[0].url}
-            name={track.name}
-            artist={track.album.artists[0].name}
-            album={track.album.name}
-            duration={track.duration_ms}
-            link={track.uri}
-          />
-        ))}
-      </div>
-      <div className="w-full p-[5vw] md:p-[5vh]">
-        <div className="text-white font-bold text-3xl mb-6">專輯</div>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-[10px] w-full">
+    </div>
+  );
+};
+
+/**
+ * 熱門歌曲區塊組件
+ */
+interface TopTracksProps {
+  tracks: SpotifyApi.TrackObjectFull[];
+}
+
+const TopTracks: FC<TopTracksProps> = ({ tracks }) => {
+  return (
+    <div className="mb-10">
+      <div className="text-white font-bold text-2xl mb-8">熱門歌曲</div>
+      {!tracks?.length ? (
+        <NoDataMessage message="暫無歌曲數據" className="h-[200px]" />
+      ) : (
+        <div className="w-full">
+          {tracks?.map((track) => (
+            <TrackCard
+              key={track.id}
+              image={track.album.images[0].url}
+              name={track.name}
+              artist={track.album.artists[0].name}
+              album={track.album.name}
+              duration={track.duration_ms}
+              link={track.uri}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/**
+ * 專輯集合區塊組件
+ */
+interface AlbumsGridProps {
+  albums: SpotifyApi.AlbumObjectSimplified[];
+}
+
+const AlbumsGrid: FC<AlbumsGridProps> = ({ albums }) => {
+  return (
+    <div>
+      <div className="text-white font-bold text-2xl mb-8">專輯</div>
+      {!albums?.length ? (
+        <NoDataMessage message="暫無專輯數據" className="h-[200px]" />
+      ) : (
+        <div className="w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
           {albums?.map((album) => (
             <MediaCard
               key={album.id}
@@ -60,49 +102,61 @@ const Artist = ({ artist, topTracks, albums }: ArtistPageProps) => {
               subtitle={`${album.type} · ${album.release_date.slice(0, 4)}`}
               textAlign="text-left"
               href={`/album/${album.id}`}
-              borderRadius="rounded-none"
+              borderRadius="rounded-lg"
             />
           ))}
         </div>
+      )}
+    </div>
+  );
+};
+
+/**
+ * 主藝術家頁面組件
+ */
+const Artist: FC<ArtistPageProps> = ({ artist, topTracks, albums }) => {
+  return (
+    <div className="spotify-container px-0 py-0">
+      <ArtistHeader
+        name={artist?.name}
+        followers={artist?.followers.total}
+        image={artist?.images[0]?.url}
+      />
+      <div className="p-[5vw]">
+        <TopTracks tracks={topTracks} />
+        <AlbumsGrid albums={albums} />
       </div>
     </div>
   );
 };
 
+/**
+ * 伺服器端獲取資料
+ */
 export const getServerSideProps: GetServerSideProps<ArtistPageProps> = async (
   context
 ) => {
-  const session = (await getSession(context)) as ExtendedSession;
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
-
-  const spotifyApi = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
-    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-    accessToken: session.user?.accessToken as string,
-  });
-
   const artistId = context.params?.artist as string;
 
   try {
-    const [artistData, topTracksData, albumsData] = await Promise.all([
-      spotifyApi.getArtist(artistId),
-      spotifyApi.getArtistTopTracks(artistId, "US"),
-      spotifyApi.getArtistAlbums(artistId, { limit: 6 }),
-    ]);
+    // 使用 API 路由獲取藝術家數據
+    const response = await fetch(
+      `${process.env.API_BASE_URL}/api/artist/${artistId}`,
+      {
+        headers: {
+          cookie: context.req.headers.cookie || "",
+        },
+      }
+    );
+
+    // 解析返回的數據
+    const data = await response.json();
 
     return {
       props: {
-        artist: artistData.body,
-        topTracks: topTracksData.body.tracks.slice(0, 5),
-        albums: albumsData.body.items,
+        artist: data.artist,
+        topTracks: data.topTracks,
+        albums: data.albums,
       },
     };
   } catch (error) {
