@@ -1,50 +1,73 @@
-import { useState, useEffect } from "react"
-import { useSession } from "next-auth/react"
-import Router from 'next/router';
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
 
-import useSpotify from '../hooks/useSpotify'
-import BlockUI from "../components/blockUI";
+import SpotifyWebApi from "spotify-web-api-node";
 import MediaCard from "../components/mediaCard";
 
-const Playlists = () => {
-    const spotifyApi = useSpotify()
-    const { data: session } = useSession()
-
-    const [isLoading, setIsLoading] = useState(true);
-    const [playlists, setPlaylists] = useState<SpotifyApi.PlaylistObjectSimplified[]>()
-
-    useEffect(() => {
-        if (spotifyApi.getAccessToken() && session) {
-            spotifyApi.getUserPlaylists()
-                .then((res) => setPlaylists(res.body.items))
-                .then(() => setIsLoading(false))
-                .catch(() => Router.push('/error'))
-        } else {
-            Router.push('/login')
-        }
-    }, [session, spotifyApi])
-
-    return (
-        <>
-            <div className='spotify-container'>
-                <div className="title">Playlists</div>
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[10px] w-full">
-                    {playlists?.map((playlist) => {
-                        return (
-                            <MediaCard
-                                key={playlist.id}
-                                image={playlist?.images[0]?.url || ''}
-                                title={playlist.name}
-                                subtitle={`${playlist.tracks.total} Tracks`}
-                                textalign='text-center'
-                                href={`/playlist/${playlist.id}`} />
-                        )
-                    })}
-                </div>
-            </div>
-            <BlockUI isOpen={isLoading} />
-        </>
-    )
+interface PlaylistsProps {
+  playlists: SpotifyApi.PlaylistObjectSimplified[];
 }
 
-export default Playlists
+const Playlists = ({ playlists }: PlaylistsProps) => {
+  return (
+    <>
+      <div className="spotify-container">
+        <div className="title">Playlists</div>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(120px,_1fr))] gap-[10px] w-full">
+          {playlists?.map((playlist) => {
+            return (
+              <MediaCard
+                key={playlist.id}
+                image={playlist?.images[0]?.url || ""}
+                title={playlist.name}
+                subtitle={`${playlist.tracks.total} Tracks`}
+                textAlign="text-center"
+                href={`/playlist/${playlist.id}`}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+
+  try {
+    const spotifyApi = new SpotifyWebApi({
+      clientId: process.env.SPOTIFY_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+      accessToken: session.user?.accessToken as string,
+    });
+
+    const playlists = await spotifyApi.getUserPlaylists();
+
+    return {
+      props: {
+        playlists: playlists.body.items,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching playlists:", error);
+
+    return {
+      redirect: {
+        destination: "/error",
+        permanent: false,
+      },
+    };
+  }
+};
+
+export default Playlists;

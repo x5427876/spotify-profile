@@ -1,22 +1,40 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import Head from 'next/head'
-import { SessionProvider } from "next-auth/react"
-import Aside from '../components/aside/aside'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
+import Head from "next/head";
+import Aside from "../components/aside/aside";
+import "../styles/globals.css";
 
-export default function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+export default function MyApp({
+  Component,
+  pageProps,
+}: AppProps<{
+  session: Session;
+}>) {
   return (
     <>
-      <SessionProvider session={session}>
-        <Head>
-          <title>Spotify Profile</title>
-          <link rel="shortcut icon" href="/spotify.svg" />
-        </Head>
-        <div className='flex flex-col-reverse md:flex-row h-[-webkit-fill-available]'>
-          <Aside />
-          <Component {...pageProps} />
-        </div>
+      <SessionProvider session={pageProps.session}>
+        <QueryClientProvider client={queryClient}>
+          <Head>
+            <title>Spotify Profile</title>
+            <link rel="shortcut icon" href="/spotify.svg" />
+          </Head>
+          <div className="flex flex-col-reverse md:flex-row h-[-webkit-fill-available]">
+            <Aside />
+            <Component {...pageProps} />
+          </div>
+        </QueryClientProvider>
       </SessionProvider>
     </>
-  )
+  );
 }
