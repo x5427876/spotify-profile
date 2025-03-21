@@ -97,7 +97,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   // 優先使用 NEXTAUTH_SECRET 以保持一致性
-  secret: process.env.NEXTAUTH_SECRET || process.env.SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   // 配置 cookie 以確保跨環境一致性
   cookies: {
     sessionToken: {

@@ -4,19 +4,11 @@
 
 @layer components {
   .spotify-container {
-    @apply w-[100vw] h-[calc(100vh-70px)] md:w-[calc(100%-100px)] md:h-[100vh] p-[5vw] bg-zinc-900 text-white flex flex-col overflow-y-scroll;
+    @apply w-[100vw] h-[calc(100dvh-70px)] md:w-[calc(100%-100px)] md:h-[100vh] p-[5vw] bg-zinc-900 text-white flex flex-col overflow-y-scroll;
   }
 
   .spotify-container > .title {
     @apply w-full text-white flex justify-center md:justify-start items-center mb-10 font-bold text-2xl;
-  }
-
-  .pic-hover-effect {
-    @apply opacity-50 transition ease-in-out;
-  }
-
-  .text-hover-effect {
-    @apply hover:border-b border-white;
   }
 
   /* 隱藏滾動條但保持滾動功能 */

@@ -31,8 +31,11 @@ interface ArtistHeaderProps {
 const ArtistHeader: FC<ArtistHeaderProps> = ({ name, followers, image }) => {
   return (
     <div
-      className="h-[40vh] w-full bg-cover bg-center flex items-end justify-between p-[4vw] relative"
-      style={{ backgroundImage: `url(${image})` }}
+      className="w-full bg-cover bg-center flex items-end justify-between p-[4vw] relative bg-gray-900"
+      style={{
+        backgroundImage: `url(${image})`,
+        minHeight: "40vh",
+      }}
     >
       <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/50 to-black/100 pointer-events-none" />
       <div className="backdrop-blur-sm max-w-[80%] p-[1vw] flex flex-col relative z-10">
@@ -57,9 +60,9 @@ interface TopTracksProps {
 const TopTracks: FC<TopTracksProps> = ({ tracks }) => {
   return (
     <div className="mb-10">
-      <div className="text-white font-bold text-2xl mb-8">熱門歌曲</div>
+      <div className="text-white font-bold text-2xl mb-8">Popular</div>
       {!tracks?.length ? (
-        <NoDataMessage message="暫無歌曲數據" className="h-[200px]" />
+        <NoDataMessage message="No popular tracks" />
       ) : (
         <div className="w-full">
           {tracks?.map((track) => (
@@ -89,9 +92,9 @@ interface AlbumsGridProps {
 const AlbumsGrid: FC<AlbumsGridProps> = ({ albums }) => {
   return (
     <div>
-      <div className="text-white font-bold text-2xl mb-8">專輯</div>
+      <div className="text-white font-bold text-2xl mb-8">Albums</div>
       {!albums?.length ? (
-        <NoDataMessage message="暫無專輯數據" className="h-[200px]" />
+        <NoDataMessage message="No albums data" />
       ) : (
         <div className="w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
           {albums?.map((album) => (

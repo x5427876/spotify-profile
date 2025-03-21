@@ -21,7 +21,7 @@ export default async function middleware(req: NextRequest) {
     // 檢查使用者會話狀態 (token 包含會話資訊)
     const token = await getToken({
       req,
-      secret: process.env.NEXTAUTH_SECRET || process.env.SECRET,
+      secret: process.env.NEXTAUTH_SECRET,
       secureCookie: process.env.NODE_ENV === "production",
       cookieName: "next-auth.session-token", // 確保使用正確的 cookie 名稱
     });

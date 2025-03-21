@@ -146,7 +146,8 @@ const MediaCardContent: FC<MediaCardContentProps> = ({
     mt-${THEME.spacing.content}
   `;
 
-  const titleClassName = "overflow-hidden text-ellipsis whitespace-nowrap";
+  const titleClassName =
+    "overflow-hidden text-ellipsis whitespace-nowrap font-bold";
   const subtitleClassName = `text-[${THEME.colors.textSecondary}] text-sm`;
 
   return (

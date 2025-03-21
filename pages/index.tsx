@@ -37,20 +37,20 @@ const UserInfo = ({ session, userProfile, followedArtists, playlists }) => (
         <div className="text-2xl font-bold text-spotify">
           {userProfile?.followers?.total || 0}
         </div>
-        <div>FOLLOWERS</div>
+        <div>Followers</div>
       </div>
       <div className="flex w-1/3 flex-col items-center justify-center">
         <div className="text-2xl font-bold text-spotify">
           {followedArtists?.length || 0}
         </div>
-        <div>FOLLOWING</div>
+        <div>Following</div>
       </div>
       <Link href="/playlists">
         <div className="flex w-1/3 cursor-pointer flex-col items-center justify-center">
           <div className="text-2xl font-bold text-spotify">
             {playlists?.length || 0}
           </div>
-          <div>PLAYLISTS</div>
+          <div>Playlists</div>
         </div>
       </Link>
     </div>
@@ -60,7 +60,7 @@ const UserInfo = ({ session, userProfile, followedArtists, playlists }) => (
         signOut({ callbackUrl: `${window.location.origin}/login` })
       }
     >
-      LOG OUT
+      Log out
     </Button>
   </div>
 );
@@ -71,7 +71,7 @@ const TopArtistsSection = ({ topArtists }) => (
       <div className="text-xl font-bold text-white">Top Artist of All Time</div>
       <Link href="/artists">
         <Button className="rounded-full border border-white px-6 text-xs text-white transition hover:bg-white hover:text-black">
-          SEE MORE
+          More
         </Button>
       </Link>
     </div>
@@ -98,7 +98,7 @@ const TopTracksSection = ({ topTracks }) => (
       <div className="text-xl font-bold text-white">Top Tracks of All Time</div>
       <Link href="/tracks">
         <Button className="rounded-full border border-white px-6 text-xs text-white transition hover:bg-white hover:text-black">
-          SEE MORE
+          More
         </Button>
       </Link>
     </div>
