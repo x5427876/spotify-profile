@@ -45,7 +45,7 @@ const Artists = ({ initialArtists }: ArtistsProps) => {
         <div className="mb-8 text-2xl font-bold text-white">Top Artists</div>
 
         {/* 時間範圍選擇按鈕 */}
-        <div className="mb-10 flex justify-start gap-4">
+        <div className="mb-10">
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
             <Button
               onClick={() => handleTermChange("long_term")}
@@ -74,7 +74,7 @@ const Artists = ({ initialArtists }: ArtistsProps) => {
 
         {/* 藝術家列表 */}
         {!artists?.length ? (
-          <NoDataMessage message="No artists data" />
+          <NoDataMessage message="No Artists Found" />
         ) : (
           <div className="grid w-full grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-6">
             {artists.map((artist) => (

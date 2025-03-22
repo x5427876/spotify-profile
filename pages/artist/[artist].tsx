@@ -60,11 +60,11 @@ interface TopTracksProps {
 const TopTracks: FC<TopTracksProps> = ({ tracks }) => {
   return (
     <div className="mb-10">
-      <div className="text-white font-bold text-2xl mb-8">Popular</div>
+      <div className="text-2xl font-bold text-white mb-8">Popular</div>
       {!tracks?.length ? (
-        <NoDataMessage message="No popular tracks" />
+        <NoDataMessage message="No Popular Tracks Found" />
       ) : (
-        <div className="w-full">
+        <div className="w-full space-y-4">
           {tracks?.map((track) => (
             <TrackCard
               key={track.id}
@@ -92,9 +92,9 @@ interface AlbumsGridProps {
 const AlbumsGrid: FC<AlbumsGridProps> = ({ albums }) => {
   return (
     <div>
-      <div className="text-white font-bold text-2xl mb-8">Albums</div>
+      <div className="text-2xl font-bold text-white mb-8">Albums</div>
       {!albums?.length ? (
-        <NoDataMessage message="No albums data" />
+        <NoDataMessage message="No Albums Found" />
       ) : (
         <div className="w-full grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
           {albums?.map((album) => (
@@ -125,7 +125,7 @@ const Artist: FC<ArtistPageProps> = ({ artist, topTracks, albums }) => {
         followers={artist?.followers.total}
         image={artist?.images[0]?.url}
       />
-      <div className="p-[5vw]">
+      <div className="p-8 md:p-16">
         <TopTracks tracks={topTracks} />
         <AlbumsGrid albums={albums} />
       </div>

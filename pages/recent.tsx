@@ -31,7 +31,7 @@ const Recent = ({ initialTracks }: RecentProps) => {
         Recently Played Tracks
       </div>
       {!tracks?.length ? (
-        <NoDataMessage message="暫無最近播放記錄" />
+        <NoDataMessage message="No Recent Tracks Found" />
       ) : (
         <div className="w-full">
           {tracks.map((track, index) => {

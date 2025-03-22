@@ -76,7 +76,7 @@ const TopArtistsSection = ({ topArtists }) => (
       </Link>
     </div>
     {!topArtists?.length ? (
-      <NoDataMessage message="暫無熱門藝術家" className="h-50" />
+      <NoDataMessage message="No Top Artists Found" className="h-50" />
     ) : (
       <div className="mt-10 px-4">
         {topArtists.map((artist) => (
@@ -103,7 +103,7 @@ const TopTracksSection = ({ topTracks }) => (
       </Link>
     </div>
     {!topTracks?.length ? (
-      <NoDataMessage message="暫無熱門歌曲" className="h-50" />
+      <NoDataMessage message="No Top Tracks Found" className="h-50" />
     ) : (
       <div className="mt-10 px-4">
         {topTracks.map((track) => (

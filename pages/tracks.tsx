@@ -45,7 +45,7 @@ const Tracks = ({ initialTracks }: TracksProps) => {
         <div className="mb-8 text-2xl font-bold text-white">Top Tracks</div>
 
         {/* 時間範圍選擇按鈕 */}
-        <div className="mb-10 flex justify-start gap-4">
+        <div className="mb-10">
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
             <Button
               onClick={() => handleTermChange("long_term")}
@@ -74,9 +74,9 @@ const Tracks = ({ initialTracks }: TracksProps) => {
 
         {/* 歌曲列表 */}
         {!tracks?.length ? (
-          <NoDataMessage message="No tracks data" />
+          <NoDataMessage message="No Tracks Found" />
         ) : (
-          <div className="w-full">
+          <div className="w-full space-y-4">
             {tracks.map((track) => (
               <TrackCard
                 key={track.id}

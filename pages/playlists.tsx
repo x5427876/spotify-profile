@@ -30,7 +30,7 @@ const Playlists = ({ initialPlaylists }: PlaylistsProps) => {
       <div className="spotify-container">
         <div className="mb-8 text-2xl font-bold text-white">Playlists</div>
         {!playlists?.length ? (
-          <NoDataMessage message="暫無播放列表" />
+          <NoDataMessage message="No Playlists Found" />
         ) : (
           <div className="grid w-full gap-8 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
             {playlists.map((playlist) => {
